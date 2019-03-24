@@ -1,0 +1,141 @@
+#container {
+    width: 90%;
+    margin: auto;
+    position: absolute;
+    background-color: #F0DFDF;
+    z-index: +1111;
+    left: 5%;
+    top: 0;
+    height:100%;
+    display: none;
+}
+
+#picContainer {
+    width: 100%;
+    position: relative;
+}
+
+#mainPic {
+    width: 100%;
+    display: block;
+    margin: auto;
+    position: relative;
+}
+
+#mmask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0.4;
+    background-color: lightgrey;
+    top: 0;
+}
+
+.moveHandle {
+    width: 33%;
+    height: 33%;
+    left: 33%;
+    top: 33%;
+    position: absolute;
+}
+
+#moveHandle {
+    overflow: hidden;
+}
+
+.handle {
+    background-color: black;
+    opacity: 0.4;
+    position: absolute;
+    z-index: +1;
+}
+
+.top-handle, .bottom-handle {
+    width: 100%;
+    height: 1px;
+}
+
+.right-handle, .left-handle {
+    width: 1px;
+    height: 100%;
+}
+
+.top-handle {
+    top: 0;
+}
+
+.left-handle {
+    left: 0;;
+}
+
+.bottom-handle {
+    bottom: 0;
+}
+
+.right-handle {
+    right: 0;
+}
+
+#cutPic {
+    background-image: url("1.jpg");
+    background-size: 100%;;
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 0;
+}
+
+/*四角*/
+.top-center {
+    top: -1em;
+}
+
+.bottom-center {
+    bottom: -1em;
+}
+
+.right-center {
+    right: -1em;;
+}
+
+.left-center {
+    left: -1em;
+}
+
+.corner {
+    width: 2em;
+    height: 2em;
+    position: absolute;
+    z-index: +2;
+}
+
+.move-subject {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: +1;
+}
+
+#container button, #container input {
+    width: 38%;
+    margin:auto;
+    display: block;
+    border: 1px solid white;
+    background-color: #dfbbbb;
+    color:#322a2a;
+    font-size:14px;
+    line-height: 36px;
+    border-radius:6px;
+    outline:none;
+}
+
+#container [type="file"] {
+    display: none;
+}
+
+#canvas {
+    display: block;
+    margin: auto;
+    width: 100%;
+    display: none;
+}
