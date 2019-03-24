@@ -341,7 +341,7 @@
         #picContainer {
             width: 100%;
             position: relative;
-            margin: 10px 0;
+            top: 10px;
         }
 
         #mainPic {
@@ -1131,6 +1131,7 @@
 			moveHandleLeft = parseFloat(getComputedStyle(moveHandle[0]).left);
 		}
 	}
+
 	function toMove(e) {
 		limitSizeMoveObject();
 		//  手的位置超过了可控范围
@@ -1173,7 +1174,7 @@
 				_y = _temp;
 				break
 		}
-        //  中间图片的位置,限制上限,限制下限
+		//  中间图片的位置,限制上限,限制下限
 		var _top = Math.max(moveHandleTop + _y, 0);
 		_top = Math.min(_top + moveHandleHeight, mainPic.clientHeight) - moveHandleHeight + 'px';
 //		if (parseInt(_top) === 0) {
@@ -1389,20 +1390,26 @@
 		makeRotate(rotateIndex);
 
 		//  当旋转90度的时候
-		if (rotateIndex === 1) {
+		if (rotateIndex % 2) {
 //			picContainerStyle.left = 0;
-//			//  如果原来是扁平图片
-//			if (picAspectRatio < 1) {
-//				picContainerStyle.margin = '0px ' + -(picContainer.clientWidth - picContainer.clientHeight) / 2 + 'px';
-//				picContainerStyle.height = picContainer.clientWidth + 'px';
-//			} else {
+			//  如果原来是扁平图片
+			if (picAspectRatio < 1) {
+				picContainerStyle.left = -(picContainer.clientWidth - picContainer.clientHeight) / 2 + 'px';
+				picContainerStyle.height = picContainer.clientWidth + 'px';
+			} else {
 //				var preHeight = picContainer.clientHeight;
 //				picContainerStyle.width = Math.max(picContainer.clientWidth, subContainer.clientWidth) / picAspectRatio + 'px';
 //				var marginValue = (preHeight - picContainer.clientWidth ) / 4;
 //				picContainerStyle.margin = -marginValue + 'px ' + marginValue + 'px';
-//			}
+			}
 		} else {
 //			记录一下值吧。。。将来还原
+			if (picAspectRatio < 1) {
+				picContainerStyle.left = -(picContainer.clientWidth - picContainer.clientHeight) / 2 + 'px';
+				picContainerStyle.height = picContainer.clientWidth + 'px';
+			} else {
+
+			}
 		}
 
 	};
