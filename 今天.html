@@ -452,7 +452,7 @@
             display: block;
             margin: auto;
             width: 100%;
-            /*display: none;*/
+            display: none;
         }
     </style>
 
@@ -1471,7 +1471,6 @@
 		$('#back').on('click', function () {
 			$container.hide();
 			$uploadForm.show();
-			document.ontouchmove = null;
 			fileInput = document.getElementById('fileInput');
 			fileInput.onchange = fIChange;
 		});
@@ -1485,7 +1484,6 @@
 				setTimeout(function () {
 					$container.hide();
 					$uploadForm.show();
-					document.ontouchmove = null;
 					fileInput = document.getElementById('fileInput');
 					fileInput.onchange = fIChange;
 					$productImage = $('#productImage');
