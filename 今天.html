@@ -466,14 +466,15 @@
 
         #fileBtn {
             position: absolute;
+            /*top: 55px;*/
+            /*left: 11px;*/
             top: -111px;
             left: -111px;
         }
 
         #container [type="file"] {
-            display: none;
             /*display: block;*/
-
+            display: none;
         }
 
         #canvas {
@@ -1103,7 +1104,6 @@
 
 	cutPic.style.height = mainPic.clientHeight + 'px';
 	cutPic.style.width = mainPic.clientWidth + 'px';
-	amendmentCutPic();
 	picContainer.addEventListener('touchstart', toDown, false);
 	picContainer.addEventListener('touchend', toUp, false);
 	//  按下时,手的位置
@@ -1290,39 +1290,17 @@
 		}
 		//  将file信息暴露
 		window.fileInputData = file;
-		$($uploadForm).hide();
+		$uploadForm.hide();
 		$container.show();
 		//创建用来读取此文件的对象
 		var reader = new FileReader();
 		//读取文件成功后执行的方法函数
 		reader.onload = function (e) {
-			// alert(e)
-			// alert(e.target)
-			// alert(e.target.result)
 			//读取成功后返回的一个参数e，整个的一个进度事件
-			canvasPic.src = e.target.result;
-			mainPic.src = e.target.result;
-			cutPic.src = e.target.result;
-
-
-			canvasPic.style.height = '111px';
-			mainPic.style.height = '111px';
-			cutPic.style.height = '111px';
-			setTimeout(function () {
-				cutPic.style.height = mainPic.clientHeight + 'px';
-				cutPic.style.width = mainPic.clientWidth + 'px';
-//                    createImage();
-				moveHandleStyle0.height = mainPic.clientHeight / 3 + 'px';
-				moveHandleStyle0.width = mainPic.clientWidth / 3 + 'px';
-				moveHandleStyle0.left = mainPic.clientWidth / 3 + 'px';
-				moveHandleStyle0.top = mainPic.clientHeight / 3 + 'px';
-				moveHandleStyle1.height = mainPic.clientHeight / 3 + 'px';
-				moveHandleStyle1.width = mainPic.clientWidth / 3 + 'px';
-				moveHandleStyle1.left = mainPic.clientWidth / 3 + 'px';
-				moveHandleStyle1.top = mainPic.clientHeight / 3 + 'px';
-				amendmentCutPic();
-			}, 0);
-			amendmentCutPic();
+			var result = e.target.result;
+			canvasPic.src = result;
+			mainPic.src = result;
+			cutPic.src = result;
 		};
 		//使用该对象读取file文件
 		reader.readAsDataURL(file);
@@ -1330,12 +1308,33 @@
 		var fileBtn = document.getElementById('fileBtn');
 		fileBtn.innerHTML = '<input id="fileInput" type="file" accept="image/*"/>选择图片';
 	}
+    //  当选中的图片加载成功以后
+	mainPic.onload = function () {
+		canvasPic.style.height = '111px';
+		mainPic.style.height = '111px';
+		cutPic.style.height = '111px';
+		var clh = mainPic.clientHeight / 3 + 'px';
+		var clw = mainPic.clientWidth / 3 + 'px';
+		cutPic.style.height = mainPic.clientHeight + 'px';
+		cutPic.style.width = mainPic.clientWidth + 'px';
+		moveHandleStyle0.height = clh;
+		moveHandleStyle1.height = clh;
+		moveHandleStyle0.top = clh;
+		moveHandleStyle1.top = clh;
+		moveHandleStyle0.width = clw;
+		moveHandleStyle1.width = clw;
+		moveHandleStyle0.left = clw;
+		moveHandleStyle1.left = clw;
+		amendmentCutPic();
+	};
 
-	//  关闭上传图片的东西,全部,不清空表单,别动!
+
+	//  关闭上传图片的东西,全部,不清空表单
 	function closeInputFile() {
-		console.log(cutImg.src.length);
-		$productImage.attr('src', cutImg.src + '');         //  monk数据
-		$productImage.on('load', productImageLoad);         //  monk数据
+//		console.log(cutImg.src.length);
+		myUploadUrl = cutImg.src;                               //  monk数据，发版需注释
+		$productImage.attr('src', cutImg.src + '');         //  monk数据，发版需注释
+		$productImage.on('load', productImageLoad);         //  monk数据，发版需注释
 		return;
 		ajaxImage(cutImg.src, function (url) {
 			myUploadUrl = url;
@@ -1346,7 +1345,7 @@
 
 	//  base64 Ajax成功以后的，form表单中的图片渲染成功后的load
 	function productImageLoad() {
-		backToForm();
+//		backToForm();
 		calculateProductImage();
 	}
 
