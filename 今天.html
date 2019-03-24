@@ -279,12 +279,40 @@
             bottom: 12px;
         }
     </style>
+
+    <!--myAlert的样式-->
     <style>
-        #tar_form {
+        #mask {
+            position: fixed;
+            background: rgba(30, 29, 29, 0.4);
+            width: 100%;
+            height: 100%;
+            /*top:0;*/
+            bottom: 0;
+            left: 0;
+            display: none;
+            z-index: +9999;
+        }
+
+        #maskText {
             position: absolute;
             top: 0;
             left: 0;
-            z-index: -1;
+            margin: auto;
+            bottom: 0;
+            right: 0;
+            background-color: white;
+            width: 250px;
+            line-height: 30px;
+            height: 100px;
+            text-align: center;
+            overflow: hidden;
+            border-radius: 5px;
+            z-index: +99999;
+        }
+
+        #maskText span {
+            display: block;
         }
     </style>
 
@@ -452,7 +480,7 @@
             display: block;
             margin: auto;
             width: 100%;
-            display: none;
+            /*display: none;*/
         }
     </style>
 
@@ -559,17 +587,6 @@
                     </li>
                 </ul>
             </form>
-            <!--上传图片-->
-            <!--&lt;!&ndash;<form action="https://hachiapp-dev.pujiapp.com/api/contribute/uploadImg" id="tar_form" method="post"&ndash;&gt;-->
-            <!--&lt;!&ndash;target="temp" enctype="multipart/form-data">&ndash;&gt;-->
-            <!--<form action="https://hachiapp-beta.hachi-tech.com/api/contribute/uploadImg" id="tar_form" method="post"-->
-            <!--target="temp" enctype="multipart/form-data">-->
-            <!--&lt;!&ndash;<form action="https://hachiapp.hachi-tech.com/api/contribute/uploadImg" id="tar_form" method="post"&ndash;&gt;-->
-            <!--&lt;!&ndash;target="temp" enctype="multipart/form-data">&ndash;&gt;-->
-
-            <!--<input id="uploadFile" type="file" name="file">-->
-            <!--<button type="submit" id="ffff"></button>-->
-            <!--</form>-->
             <button id="uploadBtn" type="button">上传作品</button>
         </div>
     </div>
@@ -604,7 +621,16 @@
         <canvas id="canvas"></canvas>
     </div>
 </div>
+<div id="mask">
+    <div id="maskText">
+        <span style="line-height:65px;"></span>
+        <hr style="margin:0;">
+        <span style="color:red">确定</span>
+    </div>
+</div>
+<script src="static/common.js"></script>
 <script src="./static/jquery-v3.1.0.min.js"></script>
+<!--测试使用-->
 <script>
 	//    $.aj = $.ajax;
 	//    $.ajax = function () {
@@ -616,18 +642,19 @@
 	//        }, random);
 	//    }
 </script>
+<!--展示列表各种ajax-->
 <script>
 	//防止重复点赞
 	var isClick = true;
 	//    var interfaceUrl = "https://hachiapp-dev.pujiapp.com/api";
 	//    var interfaceUrl = "https://hachiapp-beta.hachi-tech.com/api";
 	//     var interfaceUrl = "https://hachiapp.hachi-tech.com/api";
-
-
 	var interfaceUrl = './json/';
 
 
-	var limitHeight = $(window).height();
+	var $document = $(document);
+	var $window= $(window);
+	var limitHeight = $window.height();
 	var timer = null;
 	var isResponse = true;
 	//  修复极端网络下ajax执行回调的bug
@@ -1022,14 +1049,17 @@
 
 <!--图片提交-->
 <script>
-	//  document
-	var $document = $(document);
-	var $window = $(window);
-
-	//  图片所在form
-	var $uploadForm = $('#uploadForm');
 	//  整个图片的container
 	var $container = $('#container');
+
+	//  点击上传图片或横屏拍照
+	var productImage = $("#productImage");
+	//  上传的那个input的value，是个base64
+	var myUploadUrl = '';
+	//  图片所在form
+	var $uploadForm = $('#uploadForm');
+
+
 	$('#uploadImg').on('click', function (e) {
 		if (e.target.tagName.toLowerCase() === 'img') {
 			$container.css('height', $window.height() + 5);
@@ -1037,13 +1067,7 @@
 //            return;
 			$('#fileBtn').click();
 		}
-	})
-
-</script>
-<script src="static/common.js"></script>
-<script>
-	var productImage = $("#productImage");
-	var myUploadUrl = ''
+	});
 </script>
 
 
@@ -1156,49 +1180,7 @@
 			}
 		})
 	});
-
 </script>
-<style>
-    #mask {
-        position: fixed;
-        background: rgba(30, 29, 29, 0.4);
-        width: 100%;
-        height: 100%;
-        /*top:0;*/
-        bottom: 0;
-        left: 0;
-        display: none;
-        z-index: +9999;
-    }
-
-    #maskText {
-        position: absolute;
-        top: 0;
-        left: 0;
-        margin: auto;
-        bottom: 0;
-        right: 0;
-        background-color: white;
-        width: 250px;
-        line-height: 30px;
-        height: 100px;
-        text-align: center;
-        overflow: hidden;
-        border-radius: 5px;
-        z-index: +99999;
-    }
-
-    #maskText span {
-        display: block;
-    }
-</style>
-<div id="mask">
-    <div id="maskText">
-        <span style="line-height:65px;"></span>
-        <hr style="margin:0;">
-        <span style="color:red">确定</span>
-    </div>
-</div>
 <script>
 	function myAlert(msg) {
 		$('#mask').show();
