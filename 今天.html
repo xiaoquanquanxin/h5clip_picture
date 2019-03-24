@@ -1241,12 +1241,6 @@
 		picContainer.removeEventListener('touchmove', toMove, false);
 	}
 
-	//  修正中间图片的位置
-	function amendmentCutPic() {
-		cutPic.style.top = -moveHandle[0].offsetTop + 'px';
-		cutPic.style.left = -moveHandle[0].offsetLeft + 'px';
-	}
-
 	//  下一步
 	var nextBtn = document.getElementById('nextBtn');
 	var canvas = document.getElementById('canvas');
@@ -1310,9 +1304,11 @@
 	}
     //  当选中的图片加载成功以后
 	mainPic.onload = function () {
-		canvasPic.style.height = '111px';
-		mainPic.style.height = '111px';
-		cutPic.style.height = '111px';
+		calculateMoveObject()
+		amendmentCutPic();
+	};
+	//  计算高亮区域的大小
+	function calculateMoveObject() {
 		var clh = mainPic.clientHeight / 3 + 'px';
 		var clw = mainPic.clientWidth / 3 + 'px';
 		cutPic.style.height = mainPic.clientHeight + 'px';
@@ -1325,8 +1321,13 @@
 		moveHandleStyle1.width = clw;
 		moveHandleStyle0.left = clw;
 		moveHandleStyle1.left = clw;
-		amendmentCutPic();
-	};
+	}
+
+	//  修正中间图片的位置
+	function amendmentCutPic() {
+		cutPic.style.top = -moveHandle[0].offsetTop + 'px';
+		cutPic.style.left = -moveHandle[0].offsetLeft + 'px';
+	}
 
 
 	//  关闭上传图片的东西,全部,不清空表单
