@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <title>详情</title>
+    <title>女神节</title>
     <link rel="icon" href="https://pre.ih5.cn/favicon.ico" type="image/x-icon">
     <style>
         .main-img-cl {
@@ -279,12 +279,40 @@
             bottom: 12px;
         }
     </style>
+
+    <!--myAlert的样式-->
     <style>
-        #tar_form {
+        #mask {
+            position: fixed;
+            background: rgba(30, 29, 29, 0.4);
+            width: 100%;
+            height: 100%;
+            /*top:0;*/
+            bottom: 0;
+            left: 0;
+            display: none;
+            z-index: +9999;
+        }
+
+        #maskText {
             position: absolute;
             top: 0;
             left: 0;
-            z-index: -1;
+            margin: auto;
+            bottom: 0;
+            right: 0;
+            background-color: white;
+            width: 250px;
+            line-height: 30px;
+            height: 100px;
+            text-align: center;
+            overflow: hidden;
+            border-radius: 5px;
+            z-index: +99999;
+        }
+
+        #maskText span {
+            display: block;
         }
     </style>
 
@@ -300,6 +328,14 @@
             top: 0;
             height: 100%;
             display: none;
+        }
+
+        #subContainer {
+            position: absolute;
+            width: 90%;
+            top: 0;
+            left: 5%;
+            height: 100%;
         }
 
         #picContainer {
@@ -370,7 +406,7 @@
         }
 
         #cutPic {
-            background-image: url("1.jpg");
+            background-image: none;
             background-size: 100%;;
             position: absolute;
             z-index: 0;
@@ -400,11 +436,11 @@
         }
 
         .corner {
-            width: 2em;
-            height: 2em;
+            width: 3em;
+            height: 3em;
             position: absolute;
             z-index: +2;
-            /*background-color: rgba(16, 188, 0, 0.5);*/
+            background-color: rgba(16, 188, 0, 0.5);
         }
 
         .move-subject {
@@ -430,21 +466,22 @@
 
         #fileBtn {
             position: absolute;
+            /*top: 55px;*/
+            /*left: 11px;*/
             top: -111px;
             left: -111px;
         }
 
         #container [type="file"] {
-            display: none;
             /*display: block;*/
-
+            display: none;
         }
 
         #canvas {
             display: block;
             margin: auto;
             width: 100%;
-            display: none;
+            /*display: none;*/
         }
     </style>
 
@@ -551,17 +588,6 @@
                     </li>
                 </ul>
             </form>
-            <!--上传图片-->
-            <!--&lt;!&ndash;<form action="https://hachiapp-dev.pujiapp.com/api/contribute/uploadImg" id="tar_form" method="post"&ndash;&gt;-->
-            <!--&lt;!&ndash;target="temp" enctype="multipart/form-data">&ndash;&gt;-->
-            <!--<form action="https://hachiapp-beta.hachi-tech.com/api/contribute/uploadImg" id="tar_form" method="post"-->
-            <!--target="temp" enctype="multipart/form-data">-->
-            <!--&lt;!&ndash;<form action="https://hachiapp.hachi-tech.com/api/contribute/uploadImg" id="tar_form" method="post"&ndash;&gt;-->
-            <!--&lt;!&ndash;target="temp" enctype="multipart/form-data">&ndash;&gt;-->
-
-            <!--<input id="uploadFile" type="file" name="file">-->
-            <!--<button type="submit" id="ffff"></button>-->
-            <!--</form>-->
             <button id="uploadBtn" type="button">上传作品</button>
         </div>
     </div>
@@ -569,32 +595,68 @@
 
 <!--上传图片-->
 <div id="container">
-    <button id="fileBtn"><input id="fileInput" type="file" accept="image/*"/>选择图片</button>
-    <div id="picContainer">
-        <img id="mainPic" src="" alt="">
-        <div id="mmask"></div>
-        <div class="moveHandle">
-            <div class="handle top-handle" handle="top"></div>
-            <div class="handle right-handle" handle="right"></div>
-            <div class="handle bottom-handle" handle="bottom"></div>
-            <div class="handle left-handle" handle="left"></div>
+    <div id="subContainer">
+        <button id="fileBtn"><input id="fileInput" type="file" accept="image/*"/>选择图片</button>
+        <div id="picContainer">
+            <img id="mainPic" src="" alt="">
+            <div id="mmask"></div>
+            <div class="moveHandle">
+                <div class="handle top-handle" handle="top"></div>
+                <div class="handle right-handle" handle="right"></div>
+                <div class="handle bottom-handle" handle="bottom"></div>
+                <div class="handle left-handle" handle="left"></div>
 
-            <div class="corner top-center right-center" corner="top-right" move="move"></div>
-            <div class="corner bottom-center right-center" corner="bottom-right" move="move"></div>
-            <div class="corner top-center left-center" corner="top-left" move="move"></div>
-            <div class="corner bottom-center left-center" corner="bottom-left" move="move"></div>
+                <div class="corner top-center left-center" corner="top-left" move="move"></div>
+                <div class="corner top-center right-center" corner="top-right" move="move"></div>
+                <div class="corner bottom-center left-center" corner="bottom-left" move="move"></div>
+                <div class="corner bottom-center right-center" corner="bottom-right" move="move"></div>
+            </div>
+            <div class="moveHandle" id="moveHandle">
+                <img src="" id="cutPic" alt="">
+                <div class="move-subject" subject="subject" move="move"></div>
+            </div>
         </div>
-        <div class="moveHandle" id="moveHandle">
-            <img src="" id="cutPic" alt="">
-            <div class="move-subject" subject="subject" move="move"></div>
-        </div>
+        <img id="canvasPic" src="" alt="" style="display: none;">
+        <button id="nextBtn" class="fr">完成</button>
+        <button id="back" class="fl">返回</button>
+        <canvas id="canvas"></canvas>
     </div>
-    <img id="canvasPic" src="" alt="" style="display: none;">
-    <button id="nextBtn" class="fr">完成</button>
-    <button id="back" class="fl">返回</button>
-    <canvas id="canvas"></canvas>
 </div>
+<div id="mask">
+    <div id="maskText">
+        <span style="line-height:65px;"></span>
+        <hr style="margin:0;">
+        <span style="color:red">确定</span>
+    </div>
+</div>
+<script src="static/common.js"></script>
 <script src="./static/jquery-v3.1.0.min.js"></script>
+<!--声明-->
+<script>
+	var $document = $(document);
+	var $window = $(window);
+
+	/****
+	 * 选择图片部分
+	 * ***/
+		//  上传的那个input的value，是个base64
+	var myUploadUrl = '';
+
+
+	//  点击上传图片或横屏拍照的那个图片
+	var $productImage = $('#productImage');
+	//  点击上传图片或横屏拍照的那个图片所在div
+	var $uploadImg = $('#uploadImg');
+
+	//  整个图片的container
+	var $container = $('#container');
+	//  图片所在form
+	var $uploadForm = $('#uploadForm');
+	//  图片裁剪页面里唯一input，type=file，触发change事件,会在页面返回到form表单页面时候被重绘
+	var fileInput = document.getElementById('fileInput');
+
+</script>
+<!--测试使用-->
 <script>
 	//    $.aj = $.ajax;
 	//    $.ajax = function () {
@@ -606,18 +668,16 @@
 	//        }, random);
 	//    }
 </script>
+<!--展示列表各种ajax-->
 <script>
 	//防止重复点赞
 	var isClick = true;
 	//    var interfaceUrl = "https://hachiapp-dev.pujiapp.com/api";
 	//    var interfaceUrl = "https://hachiapp-beta.hachi-tech.com/api";
 	//     var interfaceUrl = "https://hachiapp.hachi-tech.com/api";
-
-
 	var interfaceUrl = './json/';
 
-
-	var limitHeight = $(window).height();
+	var limitHeight = $window.height();
 	var timer = null;
 	var isResponse = true;
 	//  修复极端网络下ajax执行回调的bug
@@ -630,8 +690,8 @@
 		}
 		findOneAjax = $.ajax({
 			url: interfaceUrl + "/findOne",
-//            url: interfaceUrl + "findOne.json",                             //  monk数据，发版需注释
-			url: interfaceUrl + "findOneError.json",                             //  monk数据，发版需注释
+			url: interfaceUrl + "findOne.json",                             //  monk数据，发版需注释
+//			url: interfaceUrl + "findOneError.json",                             //  monk数据，发版需注释
 			type: "post",
 			data: {
 				peopleCode: $(this).val()
@@ -719,7 +779,6 @@
 		});
 	});
 
-
 	//  tab切换
 	$('#tab-controller').on('click', function (e) {
 		if (e.target.tagName.toLowerCase() !== 'li') {
@@ -736,15 +795,15 @@
 		$activeTabContent.addClass('active-tab-content');
 		$('#contestantNumberInput').val('');
 		if (index === 2) {
-			productImage.attr("src", productImage.data("src"));
-			productImage.css({'width': '21%', 'height': 'auto'});
+			$productImage.attr("src", $productImage.data("src"));
+			$productImage.css({'width': '21%', 'height': 'auto'});
 			$("#uploadFile").val("");
 			$('#mainPic').attr('src', '');
 			$('input[name=peopleImage]').val();
 			return;
 		}
 		if (findOneAjax) {
-			console.log(findOneAjax)
+//			console.log(findOneAjax)
 			findOneAjax.abort();
 		}
 		//  如果这个以前是一张findOne的图片,就清空了吧
@@ -776,7 +835,9 @@
 			return false;
 		}
 //        清空请输入编号input后的ajax
-		console.log('清空请输入编号input后的ajax');
+		console.log('清空请输入编号input后,就应该没有ajax了');
+		$('#tab-content-' + index).html('');
+		return;
 		renderBillList(typeArray[index], $('#tab-content-' + index), true);
 	});
 
@@ -980,8 +1041,9 @@
 			}
 		];
 
+
 	$(document).on('scroll', function (e) {
-		console.log(1)
+		console.log('document scroll 了');
 		var $this = $(this);
 		var index = Number($('.active-tab').data('tab'));
 		if (index === 2) {
@@ -1003,41 +1065,15 @@
 		}, 200);
 
 	});
-	console.log('粉色')
 	//  reload页面 Ajax
 	console.log('reload页面 Ajax');
 	renderBillList(typeArray[0], $('#tab-content-0'));
 </script>
-
-<!--图片提交-->
+<!--meta作用-->
 <script>
-	//  document
-	var $document = $(document);
-	var $window = $(window);
-
-	//  图片所在form
-	var $uploadForm = $('#uploadForm');
-	//  整个图片的container
-	var $container = $('#container');
-	$('#uploadImg').on('click', function (e) {
-		if (e.target.tagName.toLowerCase() === 'img') {
-			$container.css('height', $window.height() + 5);
-			$document.scrollTop(5);
-//            return;
-			$('#fileBtn').click();
-		}
-	})
-
-</script>
-<script src="static/common.js"></script>
-<script>
-	var productImage = $("#productImage");
-	var myUploadUrl = ''
-</script>
-
-
-<!--表单提交-->
-<script>
+	/***
+	 * 使从index跳转判断
+	 * ***/
 	function GetQueryString(name) {
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 		var r = window.location.search.substr(1).match(reg);
@@ -1046,15 +1082,348 @@
 	}
 
 	var state = GetQueryString('state');
-	if (state == 'write') {
+	if (state === 'write') {
 		$('#tab-controller li').eq(2)[0].click();
 	}
+</script>
+<!--图片裁剪部分-->
+<script>
+
+	//  主要
+	var picContainer = document.getElementById('picContainer');
+	//  内图
+	var cutPic = document.getElementById('cutPic');
+	//  主图
+	var mainPic = document.getElementById('mainPic');
+	//  移动handle
+	var moveHandle = document.getElementsByClassName('moveHandle');
+	window.moveHandleStyle0 = moveHandle[0].style;
+	window.moveHandleStyle1 = moveHandle[1].style;
+	//  边
+	var handle = document.getElementsByClassName('handle');
+
+	cutPic.style.height = mainPic.clientHeight + 'px';
+	cutPic.style.width = mainPic.clientWidth + 'px';
+	picContainer.addEventListener('touchstart', toDown, false);
+	picContainer.addEventListener('touchend', toUp, false);
+	//  按下时,手的位置
+	var touchStartX = 0;
+	var touchStartY = 0;
+	//  按下时,中间图的宽度
+	var moveHandleWidth = 0;
+	var moveHandleHeight = 0;
+	//  按下时,中间图的位置
+	var moveHandleTop = 0;
+	var moveHandleLeft = 0;
+
+	function toDown(e) {
+		if (e.target.getAttribute('move') === 'move') {
+			touchStartX = e.changedTouches[0].clientX;
+			touchStartY = e.changedTouches[0].clientY;
+
+			e.preventDefault();
+			picContainer.addEventListener('touchmove', toMove, false);
+			//  在手按下，而滑动以前，记录的 高亮块的大小与位置
+			moveHandleWidth = parseFloat(getComputedStyle(moveHandle[0]).width);
+			moveHandleHeight = parseFloat(getComputedStyle(moveHandle[0]).height);
+			moveHandleTop = parseFloat(getComputedStyle(moveHandle[0]).top);
+			moveHandleLeft = parseFloat(getComputedStyle(moveHandle[0]).left);
+		}
+	}
+
+	//  上一次移动的位置，用于判断移动的方向
+	var pre_y = 0;
+	var pre_x = 0;
+
+
+	function toMove(e) {
+		limitSizeMoveObject();
+		//  手的位置超过了可控范围
+		//  左侧
+		if (e.changedTouches[0].clientX < $(picContainer).offset().left) {
+			console.log('左侧out');
+			return;
+		}
+
+		//  上册
+		if (e.changedTouches[0].clientY < $(picContainer).offset().top) {
+			console.log('上册out');
+			return;
+		}
+
+		//  右侧
+		if (e.changedTouches[0].clientX > $(picContainer).offset().left + $(picContainer).width()) {
+			console.log('右侧out');
+			return;
+		}
+		//  下册
+		if (e.changedTouches[0].clientY > $(picContainer).offset().top + $(picContainer).height()) {
+			console.log('下册out');
+			return;
+		}
+
+		//  手的位置相对移动了
+		var _x = e.changedTouches[0].clientX - touchStartX;
+		var _y = e.changedTouches[0].clientY - touchStartY;
+		if(_y > pre_y){
+//			console.log('向下');
+		}
+		pre_y = _y;
+		//  中间图片的位置,限制上限,限制下限
+		var _top = Math.max(moveHandleTop + _y, 0);
+		_top = Math.min(_top + moveHandleHeight, mainPic.clientHeight) - moveHandleHeight + 'px';
+		var _left = Math.max(moveHandleLeft + _x, 0);
+		_left = Math.min(_left + moveHandleWidth, mainPic.clientWidth) - moveHandleWidth + 'px';
+		//  图片的高度,上移时的高度,下移时的高度,下移限制高度
+		var _topHeight = moveHandleHeight - _y + 'px';
+		var _bottomHeight = Math.min(moveHandleHeight + _y + moveHandleTop, mainPic.clientHeight) - moveHandleTop + 'px';
+		//  图片的宽度,左移时的宽度,右移时的宽度,右移限制宽度
+		var _leftWidth = moveHandleWidth - _x + 'px';
+		var _rightWidth = Math.min(moveHandleWidth + _x + moveHandleLeft, mainPic.clientWidth) - moveHandleLeft + 'px';
+//            console.log(_rightWidth,moveHandleWidth + _x + moveHandleLeft, mainPic.clientWidth);
+		//  判断四个角落
+		var attrCorner = e.target.getAttribute('corner') || e.target.getAttribute('subject');
+		switch (attrCorner) {
+			case 'top-right': {
+				moveHandleStyle0.width = _rightWidth;
+				moveHandleStyle0.height = _topHeight;
+				moveHandleStyle0.top = _top;
+				moveHandleStyle1.width = _rightWidth;
+				moveHandleStyle1.height = _topHeight;
+				moveHandleStyle1.top = _top;
+				break;
+			}
+			case 'bottom-right': {
+				moveHandleStyle0.width = _rightWidth;
+				moveHandleStyle0.height = _bottomHeight;
+				moveHandleStyle1.width = _rightWidth;
+				moveHandleStyle1.height = _bottomHeight;
+				break;
+			}
+			case 'top-left': {
+				moveHandleStyle0.width = _leftWidth;
+				moveHandleStyle0.left = _left;
+				moveHandleStyle0.height = _topHeight;
+				moveHandleStyle0.top = _top;
+				moveHandleStyle1.width = _leftWidth;
+				moveHandleStyle1.left = _left;
+				moveHandleStyle1.height = _topHeight;
+				moveHandleStyle1.top = _top;
+				break;
+			}
+			case 'bottom-left': {
+				moveHandleStyle0.left = _left;
+				moveHandleStyle0.width = _leftWidth;
+				moveHandleStyle0.height = _bottomHeight;
+				moveHandleStyle1.left = _left;
+				moveHandleStyle1.width = _leftWidth;
+				moveHandleStyle1.height = _bottomHeight;
+				break;
+			}
+			case 'subject':     //  判断本体
+			{
+				moveHandleStyle0.top = _top;
+				moveHandleStyle0.left = _left;
+
+				moveHandleStyle1.top = _top;
+				moveHandleStyle1.left = _left;
+				break
+			}
+		}
+		limitSizeMoveObject();
+		amendmentCutPic();
+	}
+
+	function toUp() {
+		picContainer.removeEventListener('touchmove', toMove, false);
+//		limitSizeMoveObject();
+	}
+
+	//  下一步
+	var nextBtn = document.getElementById('nextBtn');
+	var canvas = document.getElementById('canvas');
+	var canvasPic = document.getElementById('canvasPic');
+	var ctx = canvas.getContext('2d');
+	//  预览图片
+	var cutImg = null;
+	nextBtn.onclick = createImage;
+
+	function createImage() {
+		var effectLeft = moveHandle[0].offsetLeft / mainPic.clientWidth * canvasPic.width;
+		var effectWidth = moveHandle[0].offsetWidth / mainPic.clientWidth * canvasPic.width;
+		var effectTop = moveHandle[0].offsetTop / mainPic.clientHeight * canvasPic.height;
+		var effectHeight = moveHandle[0].offsetHeight / mainPic.clientHeight * canvasPic.height;
+		canvas.width = effectWidth;
+		canvas.height = effectHeight;
+		ctx.drawImage(mainPic, effectLeft, effectTop, effectWidth, effectHeight, 0, 0, effectWidth, effectHeight);
+		var vote = Math.min(2000000 / (effectWidth * effectWidth), 1);
+		cutImg = convertCanvasToImage(canvas, vote);
+		//  别是什么乱起八早的别动我写的Ok?
+		if (cutImg.src.length > 100) {
+			closeInputFile();
+		} else {
+			myAlert('请选择图片');
+		}
+	}
+
+	function convertCanvasToImage(canvas, vote) {
+		var image = new Image();
+		image.src = canvas.toDataURL(window.fileInputData.type, vote);
+		return image;
+	}
+
+	//  选择图片的change事件
+	fileInput.onchange = fIChange;
+
+	function fIChange(e) {
+		var file = fileInput.files[0];
+		if (!file) {
+			return false
+		}
+		//  将file信息暴露
+		window.fileInputData = file;
+		$uploadForm.hide();
+		$container.show();
+		//创建用来读取此文件的对象
+		var reader = new FileReader();
+		//读取文件成功后执行的方法函数
+		reader.onload = function (e) {
+			//读取成功后返回的一个参数e，整个的一个进度事件
+			var result = e.target.result;
+			canvasPic.src = result;
+			mainPic.src = result;
+			cutPic.src = result;
+		};
+		//使用该对象读取file文件
+		reader.readAsDataURL(file);
+		//  选择图片按钮
+		var fileBtn = document.getElementById('fileBtn');
+		fileBtn.innerHTML = '<input id="fileInput" type="file" accept="image/*"/>选择图片';
+	}
+
+	//  当选中的图片加载成功以后
+	mainPic.onload = function () {
+		calculateMoveObject()
+		amendmentCutPic();
+	};
+
+	//  计算高亮区域的大小
+	function calculateMoveObject() {
+		var clh = mainPic.clientHeight / 3 + 'px';
+		var clw = mainPic.clientWidth / 3 + 'px';
+		cutPic.style.height = mainPic.clientHeight + 'px';
+		cutPic.style.width = mainPic.clientWidth + 'px';
+		moveHandleStyle0.height = clh;
+		moveHandleStyle1.height = clh;
+		moveHandleStyle0.top = clh;
+		moveHandleStyle1.top = clh;
+		moveHandleStyle0.width = clw;
+		moveHandleStyle1.width = clw;
+		moveHandleStyle0.left = clw;
+		moveHandleStyle1.left = clw;
+	}
+
+	//  修正中间图片的位置
+	function amendmentCutPic() {
+		cutPic.style.top = -moveHandle[0].offsetTop + 'px';
+		cutPic.style.left = -moveHandle[0].offsetLeft + 'px';
+	}
+
+	//  限制中间高亮使不出框
+	function limitSizeMoveObject() {
+		var maxW = Math.min(moveHandle[0].clientWidth, mainPic.clientWidth) + 'px';
+		var maxH = Math.min(moveHandle[0].clientHeight, mainPic.clientHeight) + 'px';
+//		console.log(moveHandle[0].clientWidth, mainPic.clientWidth,maxW);
+		moveHandleStyle0.width = maxW;
+		moveHandleStyle1.width = maxW;
+		moveHandleStyle0.height = maxH;
+		moveHandleStyle1.height = maxH;
+	}
+
+	//  关闭上传图片的东西,全部,不清空表单
+	function closeInputFile() {
+//		console.log(cutImg.src.length);
+		myUploadUrl = cutImg.src;                               //  monk数据，发版需注释
+		$productImage.attr('src', cutImg.src + '');         //  monk数据，发版需注释
+		$productImage.on('load', productImageLoad);         //  monk数据，发版需注释
+		return;
+		ajaxImage(cutImg.src, function (url) {
+			myUploadUrl = url;
+			$productImage.attr('src', cutImg.src + '');
+			$productImage.on('load', productImageLoad);
+		})
+	}
+
+	//  base64 Ajax成功以后的，form表单中的图片渲染成功后的load
+	function productImageLoad() {
+//		backToForm();
+		calculateProductImage();
+	}
+
+	//  计算在form中展示的图片的大小
+	function calculateProductImage() {
+		var imgWidth = $productImage.width();
+		var imgHeight = $productImage.height();
+		var winWidth = $uploadImg.width();
+		var winHeight = $uploadImg.height();
+		//  瘦高图
+		if (imgWidth / winWidth < imgHeight / winHeight) {
+			var h = Math.max(imgHeight, winHeight * 0.8);
+			h = Math.min(h, winHeight * 0.8);
+			$productImage.css('height', h);
+			$productImage.css('width', 'auto');
+		} else {
+			//  扁平图
+			var w = Math.max(imgWidth, winWidth * 0.8);
+			w = Math.min(w, winWidth * 0.8);
+			$productImage.css('width', w);
+			$productImage.css('height', 'auto');
+		}
+	}
+
+	//  ajax上传base64
+	function ajaxImage(data, callback) {
+		$.ajax({
+			url: interfaceUrl + "/contribute/uploadImg",
+			data: {
+				fileStr: data
+			},
+			type: 'post',
+			success: function (data) {
+				if (Number(data.code) === 2000) {
+					callback(data.data)
+				}
+			}
+		})
+	}
+</script>
+<!--其他功能-->
+<script>
+	/**
+	 * myAlert的js
+	 * **/
+		//  myAlert的mask
+	var $mask = $('#mask');
+
+	function myAlert(msg) {
+		$mask.show();
+		$('#maskText').find('span').eq(0).html(msg);
+	}
+
+	$mask.on('click', function () {
+		$mask.hide();
+	});
+
+	/*********
+	 * 表单提交
+	 * */
+		//  控制$('[name=peopleType]')的宽度
 	var $peopleType = $('[name=peopleType]');
 	$peopleType.on('change', function () {
 		contrllWidth();
 	});
+	contrllWidth();
 
-	//  控制$('[name=peopleType]')的宽度
 	function contrllWidth() {
 		var len = $peopleType.val();
 		switch (len) {
@@ -1076,7 +1445,14 @@
 		}
 	}
 
-	contrllWidth();
+	//  点击上传图片或横屏拍照，触发type=file 的 input
+	$productImage.on('click', function (e) {
+		$container.css('height', $window.height() + 5);
+		$document.scrollTop(5);
+		fileInput.click();
+	});
+
+	//  form表单提交
 	$('#uploadBtn').on('click', function () {
 		var data = {};
 		var isTrue = false;
@@ -1146,381 +1522,33 @@
 		})
 	});
 
-</script>
-<style>
-    #mask {
-        position: fixed;
-        background: rgba(30, 29, 29, 0.4);
-        width: 100%;
-        height: 100%;
-        /*top:0;*/
-        bottom: 0;
-        left: 0;
-        display: none;
-        z-index: +9999;
-    }
+	/*****
+	 * 图片上传页面不可滚动，防止Android触发刷新页面
+	 * ****/
+	$container[0].addEventListener('touchmove', returnFn, {passive: false});
 
-    #maskText {
-        position: absolute;
-        top: 0;
-        left: 0;
-        margin: auto;
-        bottom: 0;
-        right: 0;
-        background-color: white;
-        width: 250px;
-        line-height: 30px;
-        height: 100px;
-        text-align: center;
-        overflow: hidden;
-        border-radius: 5px;
-        z-index: +99999;
-    }
-
-    #maskText span {
-        display: block;
-    }
-</style>
-<div id="mask">
-    <div id="maskText">
-        <span style="line-height:65px;"></span>
-        <hr style="margin:0;">
-        <span style="color:red">确定</span>
-    </div>
-</div>
-<script>
-	function myAlert(msg) {
-		$('#mask').show();
-		$('#maskText').find('span').eq(0).html(msg)
-	}
-
-
-	$('#mask').on('click', function () {
-		$('#mask').hide();
-	})
-</script>
-
-
-<script>
-	window.onload = function () {
-		//  主要
-		var picContainer = document.getElementById('picContainer');
-		//  内图
-		var cutPic = document.getElementById('cutPic');
-		//  主图
-		var mainPic = document.getElementById('mainPic');
-		//  移动handle
-		var moveHandle = document.getElementsByClassName('moveHandle');
-		window.moveHandleStyle0 = moveHandle[0].style;
-		window.moveHandleStyle1 = moveHandle[1].style;
-		//  边
-		var handle = document.getElementsByClassName('handle');
-
-		cutPic.style.height = mainPic.clientHeight + 'px';
-		cutPic.style.width = mainPic.clientWidth + 'px';
-		amendmentCutPic();
-		picContainer.addEventListener('touchstart', toDown, false);
-		picContainer.addEventListener('touchend', toUp, false);
-		//  按下时,手的位置
-		var touchStartX = 0;
-		var touchStartY = 0;
-		//  按下时,中间图的宽度
-		var moveHandleWidth = 0;
-		var moveHandleHeight = 0;
-		//  按下时,中间图的位置
-		var moveHandleTop = 0;
-		var moveHandleLeft = 0;
-
-		function toDown(e) {
-			touchStartX = e.changedTouches[0].clientX;
-			touchStartY = e.changedTouches[0].clientY;
-			if (e.target.getAttribute('move') === 'move') {
-				e.preventDefault();
-				picContainer.addEventListener('touchmove', toMove, false);
-				moveHandleWidth = parseFloat(getComputedStyle(moveHandle[0]).width);
-				moveHandleHeight = parseFloat(getComputedStyle(moveHandle[0]).height);
-				moveHandleTop = parseFloat(getComputedStyle(moveHandle[0]).top);
-				moveHandleLeft = parseFloat(getComputedStyle(moveHandle[0]).left);
-			}
-		}
-
-		function toMove(e) {
-
-			moveHandleStyle0.width = Math.min(parseInt(moveHandleStyle0.width), mainPic.clientWidth) + 'px';
-			moveHandleStyle1.width = Math.min(parseInt(moveHandleStyle1.width), mainPic.clientWidth) + 'px';
-			moveHandleStyle0.height = Math.min(parseInt(moveHandleStyle0.height), mainPic.clientHeight) + 'px';
-			moveHandleStyle1.height = Math.min(parseInt(moveHandleStyle1.height), mainPic.clientHeight) + 'px';
-			//  手的位置超过了可控范围
-			//  左侧
-			if (e.changedTouches[0].clientX < $(picContainer).offset().left) {
-				console.log(111);
-				return;
-			}
-
-			//  上册
-			if (e.changedTouches[0].clientY < $(picContainer).offset().top) {
-				return;
-			}
-
-			//  右侧
-			if (e.changedTouches[0].clientX > $(picContainer).offset().left + $(picContainer).width()) {
-				return;
-			}
-			//  下册
-			if (e.changedTouches[0].clientY > $(picContainer).offset().top + $(picContainer).height()) {
-				return;
-			}
-
-			console.log('不应噶i出现');
-			//  手的位置相对移动了
-			var _x = e.changedTouches[0].clientX - touchStartX;
-			var _y = e.changedTouches[0].clientY - touchStartY;
-//            console.log(_x);
-			//  中间图片的位置,限制上限,限制下限
-			var _top = Math.max(moveHandleTop + _y, 0);
-			_top = Math.min(_top + moveHandleHeight, mainPic.clientHeight) - moveHandleHeight + 'px';
-			var _left = Math.max(moveHandleLeft + _x, 0);
-			_left = Math.min(_left + moveHandleWidth, mainPic.clientWidth) - moveHandleWidth + 'px';
-			//  图片的高度,上移时的高度,下移时的高度,下移限制高度
-			var _topHeight = moveHandleHeight - _y + 'px';
-			var _bottomHeight = Math.min(moveHandleHeight + _y + moveHandleTop, mainPic.clientHeight) - moveHandleTop + 'px';
-			//  图片的宽度,左移时的宽度,右移时的宽度,右移限制宽度
-			var _leftWidth = moveHandleWidth - _x + 'px';
-			var _rightWidth = Math.min(moveHandleWidth + _x + moveHandleLeft, mainPic.clientWidth) - moveHandleLeft + 'px';
-//            console.log(_rightWidth,moveHandleWidth + _x + moveHandleLeft, mainPic.clientWidth);
-			//  判断四个角落
-			var attrCorner = e.target.getAttribute('corner') || e.target.getAttribute('subject');
-			switch (attrCorner) {
-				case 'top-right': {
-					moveHandleStyle0.width = _rightWidth;
-					moveHandleStyle0.height = _topHeight;
-					moveHandleStyle0.top = _top;
-					moveHandleStyle1.width = _rightWidth;
-					moveHandleStyle1.height = _topHeight;
-					moveHandleStyle1.top = _top;
-					break;
-				}
-				case 'bottom-right': {
-					moveHandleStyle0.width = _rightWidth;
-					moveHandleStyle0.height = _bottomHeight;
-					moveHandleStyle1.width = _rightWidth;
-					moveHandleStyle1.height = _bottomHeight;
-					break;
-				}
-				case 'top-left': {
-					moveHandleStyle0.width = _leftWidth;
-					moveHandleStyle0.left = _left;
-					moveHandleStyle0.height = _topHeight;
-					moveHandleStyle0.top = _top;
-					moveHandleStyle1.width = _leftWidth;
-					moveHandleStyle1.left = _left;
-					moveHandleStyle1.height = _topHeight;
-					moveHandleStyle1.top = _top;
-					break;
-				}
-				case 'bottom-left': {
-					moveHandleStyle0.left = _left;
-					moveHandleStyle0.width = _leftWidth;
-					moveHandleStyle0.height = _bottomHeight;
-					moveHandleStyle1.left = _left;
-					moveHandleStyle1.width = _leftWidth;
-					moveHandleStyle1.height = _bottomHeight;
-					break;
-				}
-				case 'subject':     //  判断本体
-				{
-					moveHandleStyle0.top = _top;
-					moveHandleStyle0.left = _left;
-
-					moveHandleStyle1.top = _top;
-					moveHandleStyle1.left = _left;
-					break
-				}
-			}
-//            var mw = Math.min( parseInt(moveHandleStyle0.width) , mainPic.clientWidth);
-//            var mh = Math.min( parseInt(moveHandleStyle0.height) , mainPic.clientHeight);
-//            console.log(moveHandleStyle0.width);
-//            moveHandleStyle0.width = Math.min(parseInt(moveHandleStyle0.width), mainPic.clientWidth) + 'px';
-//            moveHandleStyle1.width = Math.min(parseInt(moveHandleStyle1.width), mainPic.clientWidth) + 'px';
-//            moveHandleStyle0.height = Math.min(parseInt(moveHandleStyle0.height), mainPic.clientHeight) + 'px';
-//            moveHandleStyle1.height = Math.min(parseInt(moveHandleStyle1.height), mainPic.clientHeight) + 'px';
-
-//            moveHandleStyle0.top = _top;
-//            moveHandleStyle0.left = _left;
-//            moveHandleStyle1.top = _top;
-//            moveHandleStyle1.left = _left;
-			amendmentCutPic();
-		}
-
-		function toUp() {
-			picContainer.removeEventListener('touchmove', toMove, false);
-		}
-
-		//  修正中间图片的位置
-		function amendmentCutPic() {
-			cutPic.style.top = -moveHandle[0].offsetTop + 'px';
-			cutPic.style.left = -moveHandle[0].offsetLeft + 'px';
-		}
-
-		//  下一步
-		var nextBtn = document.getElementById('nextBtn');
-		var canvas = document.getElementById('canvas');
-		var canvasPic = document.getElementById('canvasPic');
-		var ctx = canvas.getContext('2d');
-		//  预览图片
-		var cutImg = null;
-		nextBtn.onclick = function () {
-			createImage();
-		};
-
-		function createImage() {
-			var effectLeft = moveHandle[0].offsetLeft / mainPic.clientWidth * canvasPic.width;
-			var effectWidth = moveHandle[0].offsetWidth / mainPic.clientWidth * canvasPic.width;
-			var effectTop = moveHandle[0].offsetTop / mainPic.clientHeight * canvasPic.height;
-			var effectHeight = moveHandle[0].offsetHeight / mainPic.clientHeight * canvasPic.height;
-			canvas.width = effectWidth;
-			canvas.height = effectHeight;
-			ctx.drawImage(mainPic, effectLeft, effectTop, effectWidth, effectHeight, 0, 0, effectWidth, effectHeight);
-			var vote = Math.min(2000000 / (effectWidth * effectWidth), 1);
-			cutImg = convertCanvasToImage(canvas, vote);
-			//  别是什么乱起八早的别动我写的Ok?
-			if (cutImg.src.length > 100) {
-				closeInputFile();
-			} else {
-				myAlert('请选择图片');
-			}
-		}
-
-		function convertCanvasToImage(canvas, vote) {
-			var image = new Image();
-			image.src = canvas.toDataURL(window.fileInputData.type, vote);
-			return image;
-		}
-
-		//  选择图片按钮
-		var fileBtn = document.getElementById('fileBtn');
-		var fileInput = document.getElementById('fileInput');
-		fileBtn.onclick = function () {
-			fileInput.click();
-		};
-		//  file的change事件
-		fileInput.onchange = fIChange;
-
-		function fIChange(e) {
-			$container[0].addEventListener('touchmove', returnFn, {passive: false});
-
-			var file = fileInput.files[0];
-			if (!file) {
-				return false
-			}
-			//  将file信息暴露
-			window.fileInputData = file;
-			$($uploadForm).hide();
-			$container.show();
-			//创建用来读取此文件的对象
-			var reader = new FileReader();
-			//读取文件成功后执行的方法函数
-			reader.onload = function (e) {
-				// alert(e)
-				// alert(e.target)
-				// alert(e.target.result)
-				//读取成功后返回的一个参数e，整个的一个进度事件
-				canvasPic.src = e.target.result;
-				mainPic.src = e.target.result;
-				cutPic.src = e.target.result;
-				mainPic.style.height = '111px';
-				setTimeout(function () {
-					cutPic.style.height = mainPic.clientHeight + 'px';
-					cutPic.style.width = mainPic.clientWidth + 'px';
-//                    createImage();
-					moveHandleStyle0.height = mainPic.clientHeight / 3 + 'px';
-					moveHandleStyle0.width = mainPic.clientWidth / 3 + 'px';
-					moveHandleStyle0.left = mainPic.clientWidth / 3 + 'px';
-					moveHandleStyle0.top = mainPic.clientHeight / 3 + 'px';
-					moveHandleStyle1.height = mainPic.clientHeight / 3 + 'px';
-					moveHandleStyle1.width = mainPic.clientWidth / 3 + 'px';
-					moveHandleStyle1.left = mainPic.clientWidth / 3 + 'px';
-					moveHandleStyle1.top = mainPic.clientHeight / 3 + 'px';
-					amendmentCutPic();
-				}, 0);
-				amendmentCutPic();
-			};
-			// alert(file.name);
-			// alert(file.size);
-			// alert(file.type);
-			//使用该对象读取file文件
-			reader.readAsDataURL(file);
-			// alert(reader.result.length);
-			fileBtn.innerHTML = '<input id="fileInput" type="file" accept="image/*"/>选择图片';
-		}
-
-		$('#back').on('click', function () {
-			$container.hide();
-			$uploadForm.show();
-			document.ontouchmove = null;
-			fileInput = document.getElementById('fileInput');
-			fileInput.onchange = fIChange;
-		});
-
-		//  关闭上传图片的东西,全部,不清空表单,别动!
-		function closeInputFile() {
-			console.log(cutImg.src.length);
-			ajaxImage(cutImg.src, function (url) {
-				myUploadUrl = url;
-				$productImage.attr('src', cutImg.src + '');
-				setTimeout(function () {
-					$container.hide();
-					$uploadForm.show();
-					document.ontouchmove = null;
-					fileInput = document.getElementById('fileInput');
-					fileInput.onchange = fIChange;
-					$productImage = $('#productImage');
-					var imgWidth = $productImage.width();
-					var imgHeight = $productImage.height();
-					var winWidth = $('#uploadImg').width();
-					var winHeight = $('#uploadImg').height();
-					//  瘦高图
-					if (imgWidth / winWidth < imgHeight / winHeight) {
-						var h = Math.max(imgHeight, winHeight * 0.8);
-						h = Math.min(h, winHeight * 0.8);
-						$productImage.css('height', h);
-						$productImage.css('width', 'auto');
-					} else {
-						//  扁平图
-						var w = Math.max(imgWidth, winWidth * 0.8);
-						w = Math.min(w, winWidth * 0.8);
-						$productImage.css('width', w);
-						$productImage.css('height', 'auto');
-					}
-				}, 5)
-			})
-		}
-	}
-
-	var $productImage = $('#productImage');
-
-	function ajaxImage(data, callback) {
-		$.ajax({
-			url: interfaceUrl + "/contribute/uploadImg",
-			data: {
-				fileStr: data
-			},
-			type: 'post',
-			success: function (data) {
-				if (Number(data.code) === 2000) {
-					callback(data.data)
-				}
-			}
-		})
-	}
-</script>
-<script>
 	function returnFn(e) {
 		e.preventDefault && e.preventDefault();
 		e.returnValue = false;
 		e.stopPropagation && e.stopPropagation();
 		return false;
 	}
+
+	/***
+	 * 从图片裁剪页面返回到表单提交页
+	 * */
+	$('#back').on('click', backToForm);
+
+	function backToForm() {
+		$container.hide();
+		$uploadForm.show();
+		fileInput = document.getElementById('fileInput');
+		fileInput.onchange = fIChange;
+	}
+</script>
+<!--临时-->
+<script>
+
 </script>
 </body>
 </html>
