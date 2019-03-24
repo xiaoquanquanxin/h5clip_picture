@@ -630,6 +630,31 @@
 </div>
 <script src="static/common.js"></script>
 <script src="./static/jquery-v3.1.0.min.js"></script>
+<!--声明-->
+<script>
+	var $document = $(document);
+	var $window = $(window);
+
+	/****
+	 * 选择图片部分
+	 * ***/
+		//  上传的那个input的value，是个base64
+	var myUploadUrl = '';
+
+
+	//  点击上传图片或横屏拍照的那个图片
+	var $productImage = $('#productImage');
+	//  点击上传图片或横屏拍照的那个图片所在div
+	var $uploadImg = $('#uploadImg');
+
+	//  整个图片的container
+	var $container = $('#container');
+	//  图片所在form
+	var $uploadForm = $('#uploadForm');
+	//  图片裁剪页面里唯一input，type=file，触发change事件,会在页面返回到form表单页面时候被重绘
+	var fileInput = document.getElementById('fileInput');
+
+</script>
 <!--测试使用-->
 <script>
 	//    $.aj = $.ajax;
@@ -651,9 +676,6 @@
 	//     var interfaceUrl = "https://hachiapp.hachi-tech.com/api";
 	var interfaceUrl = './json/';
 
-
-	var $document = $(document);
-	var $window = $(window);
 	var limitHeight = $window.height();
 	var timer = null;
 	var isResponse = true;
@@ -755,7 +777,6 @@
 			},
 		});
 	});
-
 
 	//  tab切换
 	$('#tab-controller').on('click', function (e) {
@@ -1019,6 +1040,7 @@
 			}
 		];
 
+
 	$(document).on('scroll', function (e) {
 		console.log('document scroll 了');
 		var $this = $(this);
@@ -1046,36 +1068,11 @@
 	console.log('reload页面 Ajax');
 	renderBillList(typeArray[0], $('#tab-content-0'));
 </script>
-
-<!--图片提交-->
+<!--meta作用-->
 <script>
-	//  整个图片的container
-	var $container = $('#container');
-	//  点击上传图片或横屏拍照的那个图片
-	var $productImage = $('#productImage');
-	//  点击上传图片或横屏拍照的那个图片所在div
-	var $uploadImg = $('#uploadImg');
-	//  上传的那个input的value，是个base64
-	var myUploadUrl = '';
-	//  图片所在form
-	var $uploadForm = $('#uploadForm');
-
-	//  图片裁剪页面里唯一input，type=file，触发change事件,会在页面返回到form表单页面时候被重绘
-	var fileInput = document.getElementById('fileInput');
-
-	$('#uploadImg').on('click', function (e) {
-		if (e.target.tagName.toLowerCase() === 'img') {
-			$container.css('height', $window.height() + 5);
-			$document.scrollTop(5);
-//            return;
-			fileInput.click();
-		}
-	});
-</script>
-
-
-<!--表单提交-->
-<script>
+	/***
+	 * 使从index跳转判断
+	 * ***/
 	function GetQueryString(name) {
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 		var r = window.location.search.substr(1).match(reg);
@@ -1084,119 +1081,11 @@
 	}
 
 	var state = GetQueryString('state');
-	if (state == 'write') {
+	if (state === 'write') {
 		$('#tab-controller li').eq(2)[0].click();
 	}
-	var $peopleType = $('[name=peopleType]');
-	$peopleType.on('change', function () {
-		contrllWidth();
-	});
-
-	//  控制$('[name=peopleType]')的宽度
-	function contrllWidth() {
-		var len = $peopleType.val();
-		switch (len) {
-			case '请选择':
-				$peopleType.width(77);
-				break;
-
-			case '前世女神(0-15岁)':
-				$peopleType.width(128);
-				break;
-
-			case '最美女神(15-39岁)':
-				$peopleType.width(140);
-				break;
-
-			case '资深女神(40岁及以上)':
-				$peopleType.width(163);
-				break;
-		}
-	}
-
-	contrllWidth();
-	$('#uploadBtn').on('click', function () {
-		var data = {};
-		var isTrue = false;
-		$('input[name=peopleImage]').val(myUploadUrl);
-		$('.form-input').each(function (i, t) {
-			console.log(t.value);
-			if ($.trim(t.value) === '' || ($.trim(t.value) === '请选择' && $(t).attr('name') === 'peopleType')) {
-				myAlert($(t).attr('data-msg'));
-				isTrue = true;
-				return false;
-			}
-			data[t.name] = t.value;
-		});
-		if (isTrue) {
-			return false;
-		}
-
-		switch ($peopleType.val()) {
-			case '请选择':
-				data.peopleType = '';
-				break;
-
-			case '前世女神(0-15岁)':
-				data.peopleType = '1';
-				break;
-
-			case '最美女神(15-39岁)':
-				data.peopleType = '2';
-				break;
-
-			case '资深女神(40岁及以上)':
-				data.peopleType = '3';
-				break;
-		}
-
-		var TEL_REGEXP = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
-
-		function validateTel(tel) {
-			return TEL_REGEXP.test(tel)
-		}
-
-
-		if (!validateTel(data.peoplePhone)) {
-			myAlert('手机号格式错误');
-			return false;
-		}
-
-		// alert(JSON.stringify(data));
-		data.peopleImage = myUploadUrl;
-		data.mid = getMid();
-		//  表单提交
-		$.ajax({
-			url: interfaceUrl + '/contribute/save',
-			data: data,
-			type: 'post',
-			success: function (response) {
-				if (Number(response.code) === 2000) {
-					window.location.replace('detail.html?state=none');
-				} else {
-					myAlert(response.msg);
-				}
-			},
-			error: function (err) {
-				myAlert('提交表单失败');
-				myAlert(err);
-			}
-		})
-	});
 </script>
-<script>
-	function myAlert(msg) {
-		$('#mask').show();
-		$('#maskText').find('span').eq(0).html(msg)
-	}
-
-
-	$('#mask').on('click', function () {
-		$('#mask').hide();
-	})
-</script>
-
-
+<!--图片裁剪部分-->
 <script>
 
 	//  主要
@@ -1365,9 +1254,7 @@
 	var ctx = canvas.getContext('2d');
 	//  预览图片
 	var cutImg = null;
-	nextBtn.onclick = function () {
-		createImage();
-	};
+	nextBtn.onclick = createImage;
 
 	function createImage() {
 		var effectLeft = moveHandle[0].offsetLeft / mainPic.clientWidth * canvasPic.width;
@@ -1393,13 +1280,10 @@
 		return image;
 	}
 
-	//  选择图片按钮
-	var fileBtn = document.getElementById('fileBtn');
 	//  选择图片的change事件
 	fileInput.onchange = fIChange;
+
 	function fIChange(e) {
-
-
 		var file = fileInput.files[0];
 		if (!file) {
 			return false
@@ -1440,53 +1324,54 @@
 			}, 0);
 			amendmentCutPic();
 		};
-		// alert(file.name);
-		// alert(file.size);
-		// alert(file.type);
 		//使用该对象读取file文件
 		reader.readAsDataURL(file);
-		// alert(reader.result.length);
+		//  选择图片按钮
+		var fileBtn = document.getElementById('fileBtn');
 		fileBtn.innerHTML = '<input id="fileInput" type="file" accept="image/*"/>选择图片';
-	}
-
-	$('#back').on('click', backToForm);
-
-	function backToForm() {
-		$container.hide();
-		$uploadForm.show();
-		fileInput = document.getElementById('fileInput');
-		fileInput.onchange = fIChange;
 	}
 
 	//  关闭上传图片的东西,全部,不清空表单,别动!
 	function closeInputFile() {
 		console.log(cutImg.src.length);
+		$productImage.attr('src', cutImg.src + '');         //  monk数据
+		$productImage.on('load', productImageLoad);         //  monk数据
+		return;
 		ajaxImage(cutImg.src, function (url) {
 			myUploadUrl = url;
 			$productImage.attr('src', cutImg.src + '');
-			setTimeout(function () {
-				backToForm();
-				var imgWidth = $productImage.width();
-				var imgHeight = $productImage.height();
-				var winWidth = $('#uploadImg').width();
-				var winHeight = $('#uploadImg').height();
-				//  瘦高图
-				if (imgWidth / winWidth < imgHeight / winHeight) {
-					var h = Math.max(imgHeight, winHeight * 0.8);
-					h = Math.min(h, winHeight * 0.8);
-					$productImage.css('height', h);
-					$productImage.css('width', 'auto');
-				} else {
-					//  扁平图
-					var w = Math.max(imgWidth, winWidth * 0.8);
-					w = Math.min(w, winWidth * 0.8);
-					$productImage.css('width', w);
-					$productImage.css('height', 'auto');
-				}
-			}, 5)
+			$productImage.on('load', productImageLoad);
 		})
 	}
 
+	//  base64 Ajax成功以后的，form表单中的图片渲染成功后的load
+	function productImageLoad() {
+		backToForm();
+		calculateProductImage();
+	}
+
+	//  计算在form中展示的图片的大小
+	function calculateProductImage() {
+		var imgWidth = $productImage.width();
+		var imgHeight = $productImage.height();
+		var winWidth = $uploadImg.width();
+		var winHeight = $uploadImg.height();
+		//  瘦高图
+		if (imgWidth / winWidth < imgHeight / winHeight) {
+			var h = Math.max(imgHeight, winHeight * 0.8);
+			h = Math.min(h, winHeight * 0.8);
+			$productImage.css('height', h);
+			$productImage.css('width', 'auto');
+		} else {
+			//  扁平图
+			var w = Math.max(imgWidth, winWidth * 0.8);
+			w = Math.min(w, winWidth * 0.8);
+			$productImage.css('width', w);
+			$productImage.css('height', 'auto');
+		}
+	}
+
+	//  ajax上传base64
 	function ajaxImage(data, callback) {
 		$.ajax({
 			url: interfaceUrl + "/contribute/uploadImg",
@@ -1502,18 +1387,157 @@
 		})
 	}
 </script>
+<!--其他功能-->
 <script>
+	/**
+	 * myAlert的js
+	 * **/
+		//  myAlert的mask
+	var $mask = $('#mask');
+
+	function myAlert(msg) {
+		$mask.show();
+		$('#maskText').find('span').eq(0).html(msg);
+	}
+
+	$mask.on('click', function () {
+		$mask.hide();
+	});
+
+	/*********
+	 * 表单提交
+	 * */
+		//  控制$('[name=peopleType]')的宽度
+	var $peopleType = $('[name=peopleType]');
+	$peopleType.on('change', function () {
+		contrllWidth();
+	});
+	contrllWidth();
+
+	function contrllWidth() {
+		var len = $peopleType.val();
+		switch (len) {
+			case '请选择':
+				$peopleType.width(77);
+				break;
+
+			case '前世女神(0-15岁)':
+				$peopleType.width(128);
+				break;
+
+			case '最美女神(15-39岁)':
+				$peopleType.width(140);
+				break;
+
+			case '资深女神(40岁及以上)':
+				$peopleType.width(163);
+				break;
+		}
+	}
+
+	//  点击上传图片或横屏拍照，触发type=file 的 input
+	$productImage.on('click', function (e) {
+		$container.css('height', $window.height() + 5);
+		$document.scrollTop(5);
+		fileInput.click();
+	});
+
+	//  form表单提交
+	$('#uploadBtn').on('click', function () {
+		var data = {};
+		var isTrue = false;
+		$('input[name=peopleImage]').val(myUploadUrl);
+		$('.form-input').each(function (i, t) {
+			console.log(t.value);
+			if ($.trim(t.value) === '' || ($.trim(t.value) === '请选择' && $(t).attr('name') === 'peopleType')) {
+				myAlert($(t).attr('data-msg'));
+				isTrue = true;
+				return false;
+			}
+			data[t.name] = t.value;
+		});
+		if (isTrue) {
+			return false;
+		}
+
+		switch ($peopleType.val()) {
+			case '请选择':
+				data.peopleType = '';
+				break;
+
+			case '前世女神(0-15岁)':
+				data.peopleType = '1';
+				break;
+
+			case '最美女神(15-39岁)':
+				data.peopleType = '2';
+				break;
+
+			case '资深女神(40岁及以上)':
+				data.peopleType = '3';
+				break;
+		}
+
+		var TEL_REGEXP = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
+
+		function validateTel(tel) {
+			return TEL_REGEXP.test(tel)
+		}
+
+
+		if (!validateTel(data.peoplePhone)) {
+			myAlert('手机号格式错误');
+			return false;
+		}
+
+		// alert(JSON.stringify(data));
+		data.peopleImage = myUploadUrl;
+		data.mid = getMid();
+		//  表单提交
+		$.ajax({
+			url: interfaceUrl + '/contribute/save',
+			data: data,
+			type: 'post',
+			success: function (response) {
+				if (Number(response.code) === 2000) {
+					window.location.replace('detail.html?state=none');
+				} else {
+					myAlert(response.msg);
+				}
+			},
+			error: function (err) {
+				myAlert('提交表单失败');
+				myAlert(err);
+			}
+		})
+	});
+
+	/*****
+	 * 图片上传页面不可滚动，防止Android触发刷新页面
+	 * ****/
 	$container[0].addEventListener('touchmove', returnFn, {passive: false});
+
 	function returnFn(e) {
 		e.preventDefault && e.preventDefault();
 		e.returnValue = false;
 		e.stopPropagation && e.stopPropagation();
 		return false;
 	}
+
+	/***
+	 * 从图片裁剪页面返回到表单提交页
+	 * */
+	$('#back').on('click', backToForm);
+
+	function backToForm() {
+		$container.hide();
+		$uploadForm.show();
+		fileInput = document.getElementById('fileInput');
+		fileInput.onchange = fIChange;
+	}
 </script>
 <!--临时-->
 <script>
-	$('#tab-controller').find('li').last().click();
 
 </script>
 </body>
