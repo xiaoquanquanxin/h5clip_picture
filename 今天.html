@@ -1339,12 +1339,13 @@
 		picAspectRatio = pic_rate;
 		if (pic_rate > win_rate && mainPic.clientHeight > subContainer.clientWidth - 100) {
 			var diffW = subContainer.clientWidth / pic_rate * win_rate;
-			picContainer.style.left = (subContainer.clientWidth - diffW ) / 2 + 'px';
-			picContainer.style.width = diffW + 'px';
+			picContainerStyle.left = (subContainer.clientWidth - diffW ) / 2 + 'px';
+			picContainerStyle.width = diffW + 'px';
 		} else {
-			picContainer.style.left = 0;
-			picContainer.style.width = '100%';
+			picContainerStyle.left = 0;
+			picContainerStyle.width = '100%';
 		}
+		picContainerStyle.height = 'auto';
 	}
 
 	//  计算高亮区域的大小
@@ -1394,24 +1395,30 @@
 //			picContainerStyle.left = 0;
 			//  如果原来是扁平图片
 			if (picAspectRatio < 1) {
-				picContainerStyle.left = -(picContainer.clientWidth - picContainer.clientHeight) / 2 + 'px';
+				var left = (picContainer.clientWidth - picContainer.clientHeight) / 2;
+				if (rotateIndex === 1) {
+					left = -left;
+				}
+				picContainerStyle.left = left + 'px';
 				picContainerStyle.height = picContainer.clientWidth + 'px';
 			} else {
-//				var preHeight = picContainer.clientHeight;
-//				picContainerStyle.width = Math.max(picContainer.clientWidth, subContainer.clientWidth) / picAspectRatio + 'px';
-//				var marginValue = (preHeight - picContainer.clientWidth ) / 4;
-//				picContainerStyle.margin = -marginValue + 'px ' + marginValue + 'px';
+//				//  瘦高图
+//				var left = (picContainer.clientHeight - picContainer.clientWidth) / picAspectRatio;
+//				console.log(left)
+////				picContainerStyle.left = left + 'px';
+//				console.log(Math.max(picContainer.clientWidth, subContainer.clientWidth) / picAspectRatio);
+				picContainerStyle.width = Math.max(picContainer.clientWidth, subContainer.clientWidth) / picAspectRatio + 'px';
+//				picContainerStyle.marginBottom = -93.25 * 2 + 'px';
 			}
 		} else {
 //			记录一下值吧。。。将来还原
 			if (picAspectRatio < 1) {
-				picContainerStyle.left = -(picContainer.clientWidth - picContainer.clientHeight) / 2 + 'px';
-				picContainerStyle.height = picContainer.clientWidth + 'px';
+				picContainerStyle.left = 0;
+				picContainerStyle.height = picContainer.clientWidth * picAspectRatio + 'px';
 			} else {
 
 			}
 		}
-
 	};
 
 	function makeRotate(index) {
