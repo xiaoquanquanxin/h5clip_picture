@@ -452,7 +452,7 @@
 
         #container button, #container input {
             width: 48%;
-            margin: 34px auto;
+            margin: 34px auto 0;
             display: block;
             border: none;
             background-color: #dfbbbb;
@@ -1175,7 +1175,7 @@
 //		}
 //		_pre_y = _y;
 //		console.log(parseInt(_top));
-		console.log(parseInt(_y));
+//		console.log(parseInt(_y));
 		var _left = Math.max(moveHandleLeft + _x, 0);
 		_left = Math.min(_left + moveHandleWidth, mainPic.clientWidth) - moveHandleWidth + 'px';
 		//  图片的高度,上移时的高度,下移时的高度,下移限制高度
@@ -1250,6 +1250,7 @@
 	var ctx = canvas.getContext('2d');
 	//  预览图片
 	var cutImg = null;
+	//  完成按钮
 	nextBtn.onclick = createImage;
 
 	function createImage() {
@@ -1307,9 +1308,27 @@
 
 	//  当选中的图片加载成功以后
 	mainPic.onload = function () {
-		calculateMoveObject()
+		limitSizeMainPic();
+		calculateMoveObject();
 		amendmentCutPic();
 	};
+
+	var subContainer = document.getElementById('subContainer');
+
+	//  限制巨瘦的图
+	function limitSizeMainPic() {
+		//  图片宽高比
+		var pic_rate = mainPic.clientHeight / mainPic.clientWidth;
+		var win_rate = (subContainer.clientHeight - 100) / subContainer.clientWidth;
+		if (pic_rate > win_rate && mainPic.clientHeight > subContainer.clientWidth - 100) {
+			var diffW = subContainer.clientWidth / pic_rate * win_rate;
+			picContainer.style.left = (subContainer.clientWidth - diffW ) / 2 + 'px';
+			picContainer.style.width = diffW + 'px';
+		} else {
+			picContainer.style.left = 0;
+			picContainer.style.width = '100%';
+		}
+	}
 
 	//  计算高亮区域的大小
 	function calculateMoveObject() {
@@ -1360,7 +1379,7 @@
 
 	//  base64 Ajax成功以后的，form表单中的图片渲染成功后的load
 	function productImageLoad() {
-//		backToForm();
+		backToForm();
 		calculateProductImage();
 	}
 
