@@ -302,14 +302,6 @@
             display: none;
         }
 
-        #subContainer {
-            position: absolute;
-            width: 90%;
-            top: 0;
-            left: 5%;
-            height: 100%;
-        }
-
         #picContainer {
             width: 100%;
             position: relative;
@@ -452,7 +444,7 @@
             display: block;
             margin: auto;
             width: 100%;
-            /*display: none;*/
+            display: none;
         }
     </style>
 
@@ -577,32 +569,30 @@
 
 <!--上传图片-->
 <div id="container">
-    <div id="subContainer">
-        <button id="fileBtn"><input id="fileInput" type="file" accept="image/*"/>选择图片</button>
-        <div id="picContainer">
-            <img id="mainPic" src="" alt="">
-            <div id="mmask"></div>
-            <div class="moveHandle">
-                <div class="handle top-handle" handle="top"></div>
-                <div class="handle right-handle" handle="right"></div>
-                <div class="handle bottom-handle" handle="bottom"></div>
-                <div class="handle left-handle" handle="left"></div>
+    <button id="fileBtn"><input id="fileInput" type="file" accept="image/*"/>选择图片</button>
+    <div id="picContainer">
+        <img id="mainPic" src="" alt="">
+        <div id="mmask"></div>
+        <div class="moveHandle">
+            <div class="handle top-handle" handle="top"></div>
+            <div class="handle right-handle" handle="right"></div>
+            <div class="handle bottom-handle" handle="bottom"></div>
+            <div class="handle left-handle" handle="left"></div>
 
-                <div class="corner top-center right-center" corner="top-right" move="move"></div>
-                <div class="corner bottom-center right-center" corner="bottom-right" move="move"></div>
-                <div class="corner top-center left-center" corner="top-left" move="move"></div>
-                <div class="corner bottom-center left-center" corner="bottom-left" move="move"></div>
-            </div>
-            <div class="moveHandle" id="moveHandle">
-                <img src="" id="cutPic" alt="">
-                <div class="move-subject" subject="subject" move="move"></div>
-            </div>
+            <div class="corner top-center right-center" corner="top-right" move="move"></div>
+            <div class="corner bottom-center right-center" corner="bottom-right" move="move"></div>
+            <div class="corner top-center left-center" corner="top-left" move="move"></div>
+            <div class="corner bottom-center left-center" corner="bottom-left" move="move"></div>
         </div>
-        <img id="canvasPic" src="" alt="" style="display: none;">
-        <button id="nextBtn" class="fr">完成</button>
-        <button id="back" class="fl">返回</button>
-        <canvas id="canvas"></canvas>
+        <div class="moveHandle" id="moveHandle">
+            <img src="" id="cutPic" alt="">
+            <div class="move-subject" subject="subject" move="move"></div>
+        </div>
     </div>
+    <img id="canvasPic" src="" alt="" style="display: none;">
+    <button id="nextBtn" class="fr">完成</button>
+    <button id="back" class="fl">返回</button>
+    <canvas id="canvas"></canvas>
 </div>
 <script src="./static/jquery-v3.1.0.min.js"></script>
 <script>
@@ -1438,11 +1428,7 @@
 				canvasPic.src = e.target.result;
 				mainPic.src = e.target.result;
 				cutPic.src = e.target.result;
-
-
-				canvasPic.style.height = '111px';
 				mainPic.style.height = '111px';
-				cutPic.style.height = '111px';
 				setTimeout(function () {
 					cutPic.style.height = mainPic.clientHeight + 'px';
 					cutPic.style.width = mainPic.clientWidth + 'px';
