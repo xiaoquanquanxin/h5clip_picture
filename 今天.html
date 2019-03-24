@@ -436,11 +436,11 @@
         }
 
         .corner {
-            width: 2em;
-            height: 2em;
+            width: 3em;
+            height: 3em;
             position: absolute;
             z-index: +2;
-            /*background-color: rgba(16, 188, 0, 0.5);*/
+            background-color: rgba(16, 188, 0, 0.5);
         }
 
         .move-subject {
@@ -606,10 +606,10 @@
                 <div class="handle bottom-handle" handle="bottom"></div>
                 <div class="handle left-handle" handle="left"></div>
 
-                <div class="corner top-center right-center" corner="top-right" move="move"></div>
-                <div class="corner bottom-center right-center" corner="bottom-right" move="move"></div>
                 <div class="corner top-center left-center" corner="top-left" move="move"></div>
+                <div class="corner top-center right-center" corner="top-right" move="move"></div>
                 <div class="corner bottom-center left-center" corner="bottom-left" move="move"></div>
+                <div class="corner bottom-center right-center" corner="bottom-right" move="move"></div>
             </div>
             <div class="moveHandle" id="moveHandle">
                 <img src="" id="cutPic" alt="">
@@ -1122,41 +1122,47 @@
 		if (e.target.getAttribute('move') === 'move') {
 			e.preventDefault();
 			picContainer.addEventListener('touchmove', toMove, false);
+			//  在手按下，而滑动以前，记录的 高亮块的大小与位置
 			moveHandleWidth = parseFloat(getComputedStyle(moveHandle[0]).width);
 			moveHandleHeight = parseFloat(getComputedStyle(moveHandle[0]).height);
 			moveHandleTop = parseFloat(getComputedStyle(moveHandle[0]).top);
 			moveHandleLeft = parseFloat(getComputedStyle(moveHandle[0]).left);
+
+
 		}
 	}
 
-	function toMove(e) {
+	//  记录上一次_top不为零时，_y的位置
+	var _pre_y = 0;
+	var _pre_x = 0;
 
-		moveHandleStyle0.width = Math.min(parseInt(moveHandleStyle0.width), mainPic.clientWidth) + 'px';
-		moveHandleStyle1.width = Math.min(parseInt(moveHandleStyle1.width), mainPic.clientWidth) + 'px';
-		moveHandleStyle0.height = Math.min(parseInt(moveHandleStyle0.height), mainPic.clientHeight) + 'px';
-		moveHandleStyle1.height = Math.min(parseInt(moveHandleStyle1.height), mainPic.clientHeight) + 'px';
+
+	function toMove(e) {
+		limitSizeMoveObject();
 		//  手的位置超过了可控范围
 		//  左侧
 		if (e.changedTouches[0].clientX < $(picContainer).offset().left) {
-			console.log(111);
+			console.log('左侧out');
 			return;
 		}
 
 		//  上册
 		if (e.changedTouches[0].clientY < $(picContainer).offset().top) {
+			console.log('上册out');
 			return;
 		}
 
 		//  右侧
 		if (e.changedTouches[0].clientX > $(picContainer).offset().left + $(picContainer).width()) {
+			console.log('右侧out');
 			return;
 		}
 		//  下册
 		if (e.changedTouches[0].clientY > $(picContainer).offset().top + $(picContainer).height()) {
+			console.log('下册out');
 			return;
 		}
 
-		console.log('不应噶i出现');
 		//  手的位置相对移动了
 		var _x = e.changedTouches[0].clientX - touchStartX;
 		var _y = e.changedTouches[0].clientY - touchStartY;
@@ -1164,6 +1170,12 @@
 		//  中间图片的位置,限制上限,限制下限
 		var _top = Math.max(moveHandleTop + _y, 0);
 		_top = Math.min(_top + moveHandleHeight, mainPic.clientHeight) - moveHandleHeight + 'px';
+//		if (parseInt(_top) === 0) {
+//			_y = _pre_y
+//		}
+//		_pre_y = _y;
+//		console.log(parseInt(_top));
+		console.log(parseInt(_y));
 		var _left = Math.max(moveHandleLeft + _x, 0);
 		_left = Math.min(_left + moveHandleWidth, mainPic.clientWidth) - moveHandleWidth + 'px';
 		//  图片的高度,上移时的高度,下移时的高度,下移限制高度
@@ -1222,23 +1234,13 @@
 				break
 			}
 		}
-//            var mw = Math.min( parseInt(moveHandleStyle0.width) , mainPic.clientWidth);
-//            var mh = Math.min( parseInt(moveHandleStyle0.height) , mainPic.clientHeight);
-//            console.log(moveHandleStyle0.width);
-//            moveHandleStyle0.width = Math.min(parseInt(moveHandleStyle0.width), mainPic.clientWidth) + 'px';
-//            moveHandleStyle1.width = Math.min(parseInt(moveHandleStyle1.width), mainPic.clientWidth) + 'px';
-//            moveHandleStyle0.height = Math.min(parseInt(moveHandleStyle0.height), mainPic.clientHeight) + 'px';
-//            moveHandleStyle1.height = Math.min(parseInt(moveHandleStyle1.height), mainPic.clientHeight) + 'px';
-
-//            moveHandleStyle0.top = _top;
-//            moveHandleStyle0.left = _left;
-//            moveHandleStyle1.top = _top;
-//            moveHandleStyle1.left = _left;
+		limitSizeMoveObject();
 		amendmentCutPic();
 	}
 
 	function toUp() {
 		picContainer.removeEventListener('touchmove', toMove, false);
+//		limitSizeMoveObject();
 	}
 
 	//  下一步
@@ -1302,11 +1304,13 @@
 		var fileBtn = document.getElementById('fileBtn');
 		fileBtn.innerHTML = '<input id="fileInput" type="file" accept="image/*"/>选择图片';
 	}
-    //  当选中的图片加载成功以后
+
+	//  当选中的图片加载成功以后
 	mainPic.onload = function () {
 		calculateMoveObject()
 		amendmentCutPic();
 	};
+
 	//  计算高亮区域的大小
 	function calculateMoveObject() {
 		var clh = mainPic.clientHeight / 3 + 'px';
@@ -1329,6 +1333,16 @@
 		cutPic.style.left = -moveHandle[0].offsetLeft + 'px';
 	}
 
+	//  限制中间高亮使不出框
+	function limitSizeMoveObject() {
+		var maxW = Math.min(moveHandle[0].clientWidth, mainPic.clientWidth) + 'px';
+		var maxH = Math.min(moveHandle[0].clientHeight, mainPic.clientHeight) + 'px';
+//		console.log(moveHandle[0].clientWidth, mainPic.clientWidth,maxW);
+		moveHandleStyle0.width = maxW;
+		moveHandleStyle1.width = maxW;
+		moveHandleStyle0.height = maxH;
+		moveHandleStyle1.height = maxH;
+	}
 
 	//  关闭上传图片的东西,全部,不清空表单
 	function closeInputFile() {
