@@ -1407,6 +1407,11 @@
 //				console.log(left)
 ////				picContainerStyle.left = left + 'px';
 //				console.log(Math.max(picContainer.clientWidth, subContainer.clientWidth) / picAspectRatio);
+
+				var marginValue = (picContainer.clientHeight - picContainer.clientWidth) / picAspectRatio;
+				picContainerStyle.left = marginValue + picContainer.offsetTop * 2 + 'px';
+				picContainerStyle.top = -marginValue + 'px';
+				picContainerStyle.marginBottom = -marginValue * 2 + 'px';
 				picContainerStyle.width = Math.max(picContainer.clientWidth, subContainer.clientWidth) / picAspectRatio + 'px';
 //				picContainerStyle.marginBottom = -93.25 * 2 + 'px';
 			}
@@ -1416,6 +1421,8 @@
 				picContainerStyle.left = 0;
 				picContainerStyle.height = picContainer.clientWidth * picAspectRatio + 'px';
 			} else {
+				picContainerStyle.left = 0;
+				picContainerStyle.top = '10px';
 
 			}
 		}
