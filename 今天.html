@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <title>详情</title>
+    <title>女神节</title>
     <link rel="icon" href="https://pre.ih5.cn/favicon.ico" type="image/x-icon">
     <style>
         .main-img-cl {
@@ -640,8 +640,8 @@
 		}
 		findOneAjax = $.ajax({
 			url: interfaceUrl + "/findOne",
-//            url: interfaceUrl + "findOne.json",                             //  monk数据，发版需注释
-			url: interfaceUrl + "findOneError.json",                             //  monk数据，发版需注释
+            url: interfaceUrl + "findOne.json",                             //  monk数据，发版需注释
+//			url: interfaceUrl + "findOneError.json",                             //  monk数据，发版需注释
 			type: "post",
 			data: {
 				peopleCode: $(this).val()
@@ -786,7 +786,9 @@
 			return false;
 		}
 //        清空请输入编号input后的ajax
-		console.log('清空请输入编号input后的ajax');
+		console.log('清空请输入编号input后,就应该没有ajax了');
+		$('#tab-content-' + index).html('');
+		return;
 		renderBillList(typeArray[index], $('#tab-content-' + index), true);
 	});
 
@@ -1013,7 +1015,6 @@
 		}, 200);
 
 	});
-	console.log('粉色')
 	//  reload页面 Ajax
 	console.log('reload页面 Ajax');
 	renderBillList(typeArray[0], $('#tab-content-0'));
@@ -1533,6 +1534,11 @@
 		e.stopPropagation && e.stopPropagation();
 		return false;
 	}
+</script>
+<!--临时-->
+<script>
+	$('#tab-controller').find('li').last().click();
+
 </script>
 </body>
 </html>
