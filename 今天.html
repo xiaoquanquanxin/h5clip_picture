@@ -1092,6 +1092,7 @@
 
 	//  主要
 	var picContainer = document.getElementById('picContainer');
+	var picContainerStyle = picContainer.style;
 	//  内图
 	var cutPic = document.getElementById('cutPic');
 	//  主图
@@ -1241,7 +1242,6 @@
 
 	function toUp() {
 		picContainer.removeEventListener('touchmove', toMove, false);
-//		limitSizeMoveObject();
 	}
 
 	//  下一步
@@ -1312,15 +1312,23 @@
 		limitSizeMainPic();
 		calculateMoveObject();
 		amendmentCutPic();
+		rotateIndex = 0;
+		makeRotate(rotateIndex);
 	};
 
 	var subContainer = document.getElementById('subContainer');
 
+	//  图片宽高比
+	var pic_rate = 0;
+	//  控制范围宽高比
+	var win_rate = 0;
+
 	//  限制巨瘦的图
 	function limitSizeMainPic() {
 		//  图片宽高比
-		var pic_rate = mainPic.clientHeight / mainPic.clientWidth;
-		var win_rate = (subContainer.clientHeight - 100) / subContainer.clientWidth;
+		pic_rate = mainPic.clientHeight / mainPic.clientWidth;
+		//  控制范围宽高比
+		win_rate = (subContainer.clientHeight - 100) / subContainer.clientWidth;
 		if (pic_rate > win_rate && mainPic.clientHeight > subContainer.clientWidth - 100) {
 			var diffW = subContainer.clientWidth / pic_rate * win_rate;
 			picContainer.style.left = (subContainer.clientWidth - diffW ) / 2 + 'px';
@@ -1363,6 +1371,35 @@
 		moveHandleStyle0.height = maxH;
 		moveHandleStyle1.height = maxH;
 	}
+
+	//  旋转
+	var rotate = document.getElementById('rotate');
+	rotate.onclick = function (e) {
+		rotateIndex++;
+		if (rotateIndex >= rotateArray.length) {
+			rotateIndex = 0;
+		}
+		makeRotate(rotateIndex);
+		console.log(pic_rate, win_rate);
+		//  当旋转90度的时候
+		if( rotateIndex % 2){
+            //  如果原来是
+
+        }else {
+//			记录一下值吧。。。将来还原
+        }
+		if (pic_rate > win_rate) {
+
+		}
+	};
+
+	function makeRotate(index) {
+		picContainerStyle.transform = rotateArray[index];
+//		console.log(index);
+	}
+
+	var rotateArray = ['rotate(0deg)', 'rotate(90deg)', 'rotate(180deg)', 'rotate(270deg)'];
+	var rotateIndex = 0;
 
 	//  关闭上传图片的东西,全部,不清空表单
 	function closeInputFile() {
