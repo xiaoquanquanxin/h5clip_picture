@@ -342,6 +342,7 @@
         #picContainer {
             width: 100%;
             position: relative;
+            overflow: hidden;
             /*top: 10px;*/
         }
 
@@ -1045,7 +1046,7 @@
 
 
     $(document).on('scroll', function (e) {
-        console.log('document scroll 了');
+//        console.log('document scroll 了');
         var $this = $(this);
         var index = Number($('.active-tab').data('tab'));
         if (index === 2) {
@@ -1353,7 +1354,7 @@
         picContainerStyle.height = 'auto';
         picContainerStyle.marginBottom = 0;
         picContainerStyle.top = 0;
-        mmask.style.height = mainPic.clientHeight + 'px';
+        mmask.style.height = '100%';
     }
 
     //  计算高亮区域的大小
@@ -1411,27 +1412,37 @@
                 picContainerStyle.height = picContainer.clientWidth + 'px';
             } else {
 //				//  瘦高图
+
+                var preW = picContainer.clientWidth;
                 var w = Math.max(picContainer.clientWidth, subContainer.clientWidth) / picAspectRatio;
                 picContainerStyle.width = w + 'px';
-                var marginValue = (picContainer.clientHeight - picContainer.clientWidth) / picAspectRatio;
-                picContainerStyle.left = marginValue + 'px';
-                picContainerStyle.top = -marginValue + 'px';
-                picContainerStyle.marginBottom = -marginValue * 2 + 'px';
-                console.log(picContainer);
-                picContainerStyle.height = picAspectRatio * w + 'px';
+
+                var diff = picContainer.clientHeight - picContainer.clientWidth;
+                picContainerStyle.top = -diff / 2 + 'px';
+                picContainerStyle.left = diff / 2 + 'px';
+                picContainerStyle.marginBottom = -diff + 'px';
+
+                console.log(preW, picContainer.clientWidth);
+
+                //  highlight位置，大小
+                var ratio = picContainer.clientWidth / preW;
+                moveHandleStyle0.left = parseInt(moveHandleStyle0.left) * ratio + 'px';
+                moveHandleStyle0.top = parseInt(moveHandleStyle0.top) * ratio + 'px';
+                moveHandleStyle0.height = parseInt(moveHandleStyle0.height) * ratio + 'px';
+                moveHandleStyle0.width = parseInt(moveHandleStyle0.width) * ratio + 'px';
+                moveHandleStyle1.left = parseInt(moveHandleStyle1.left) * ratio + 'px';
+                moveHandleStyle1.top = parseInt(moveHandleStyle1.top) * ratio + 'px';
+                moveHandleStyle1.height = parseInt(moveHandleStyle1.height) * ratio + 'px';
+                moveHandleStyle1.width = parseInt(moveHandleStyle1.width) * ratio + 'px';
+
+
                 //  中间高亮图
                 cutPic.style.height = 'auto';
                 cutPic.style.width = w + 'px';
-
-                cutPic.style.top = Math.max(-marginValue, 0) / 3 + 'px';
-
-                calculateMoveObject();
-                moveHandleStyle0.left = Math.max(marginValue, 0) / 3 + 'px';
-                moveHandleStyle0.top = Math.max(-marginValue, 0) / 3 + 'px';
-                moveHandleStyle1.left = Math.max(marginValue, 0) / 3 + 'px';
-                moveHandleStyle1.top = Math.max(-marginValue, 0) / 3 + 'px';
-                amendmentCutPic();
+                cutPic.style.top = -moveHandle[0].offsetTop + 'px';
+                cutPic.style.left = -moveHandle[0].offsetLeft + 'px';
             }
+            mmask.style.height = mainPic.clientHeight + 'px';
         } else {
 //			记录一下值吧。。。将来还原
             if (picAspectRatio < 1) {
@@ -1443,15 +1454,20 @@
                 //  控制范围宽高比
                 var win_rate = (subContainer.clientHeight - 100) / subContainer.clientWidth;
                 var diffW = subContainer.clientWidth / pic_rate * win_rate;
-                picContainerStyle.left = (subContainer.clientWidth - diffW ) / 2 + 'px';
-                picContainerStyle.width = diffW + 'px';
+                picContainerStyle.left = Math.max(subContainer.clientWidth - diffW, 0) / 2 + 'px';
+                picContainerStyle.width = Math.min(diffW, subContainer.clientWidth) + 'px';
                 picContainerStyle.top = 0;
                 picContainerStyle.marginBottom = 0;
                 picContainerStyle.height = 'auto';
                 cutPic.style.width = picContainer.clientWidth + 'px';
                 cutPic.style.height = 'auto';
+//                calculateMoveObject();
+//                amendmentCutPic();
             }
+            mmask.style.height = '100%';
         }
+//        calculateMoveObject();
+//        amendmentCutPic();
     };
 
     function makeRotate(index) {
