@@ -214,7 +214,8 @@
 
         /*图片*/
         #productImage {
-            width: 21%;
+            width: auto;
+            height: 168px;
             display: block;
             position: absolute;
             top: 0;
@@ -798,11 +799,10 @@
         $activeTabContent.addClass('active-tab-content');
         $('#contestantNumberInput').val('');
         if (index === 2) {
-            $productImage.attr("src", $productImage.data("src"));
-            $productImage.css({'width': '21%', 'height': 'auto'});
             $("#uploadFile").val("");
             $('#mainPic').attr('src', '');
             $('input[name=peopleImage]').val();
+            $productImage.attr("src", $productImage.data("src"));
             return;
         }
         if (findOneAjax) {
