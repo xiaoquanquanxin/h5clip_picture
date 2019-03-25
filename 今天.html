@@ -839,7 +839,7 @@
 //        清空请输入编号input后的ajax
         console.log('清空请输入编号input后,就应该没有ajax了');
         $('#tab-content-' + index).html('');
-        return;
+        typeArray[index].pageNo = 1;
         renderBillList(typeArray[index], $('#tab-content-' + index), true);
     });
 
