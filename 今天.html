@@ -692,19 +692,22 @@
         if (findOneAjax) {
             findOneAjax.abort();
         }
+
+        var url = interfaceUrl + (Math.random() < 0.2 ? "findOne.json" : "findOneError.json");  //  monk数据，发版需注释
         findOneAjax = $.ajax({
             url: interfaceUrl + "/findOne",
-            url: interfaceUrl + "findOne.json",                             //  monk数据，发版需注释
-//			url: interfaceUrl + "findOneError.json",                             //  monk数据，发版需注释
+            url: url,                                   //  monk数据，发版需注释
             type: "post",
             data: {
                 peopleCode: $(this).val()
             },
             success: function (res) {
+                var activeTab = $('.active-tab-content.tab-list');
                 if (!res.data) {
+                    activeTab.html('');
                     return false;
                 }
-                var activeTab = $('.active-tab-content.tab-list');
+
                 var content = "";
                 var peopleArea = "";
                 var peopleType = "";
@@ -1614,7 +1617,7 @@
     $productImage.on('click', function (e) {
         if (getPlatform() === 'isAndroid') {
             var appVersion = getAppVersion();
-            if( !checkVersion(appVersion)){
+            if (!checkVersion(appVersion)) {
                 myAlert('请更新到最新版本，才能上传照片');
                 return;
             }
