@@ -693,7 +693,7 @@
             findOneAjax.abort();
         }
 
-        var url = interfaceUrl + (Math.random() < 0.2 ? "findOne.json" : "findOneError.json");  //  monk数据，发版需注释
+        var url = interfaceUrl + (Math.random() < 1 ? "findOne.json" : "findOneError.json");  //  monk数据，发版需注释
         findOneAjax = $.ajax({
             url: interfaceUrl + "/findOne",
             url: url,                                   //  monk数据，发版需注释
@@ -755,32 +755,20 @@
                 }
                 activeTab.html(content);
                 activeTab.find('.main-img-cl').one('load', function (e) {
-                    var productImage = $(e.target);
-                    var imgWidth = productImage.width();
-                    var imgHeight = productImage.height();
-                    var winWidth = productImage.parents('li').width();
-                    var winHeight = winWidth * 1.24;
-                    if (imgWidth / winWidth < imgHeight / winHeight) {
-//                        var h = Math.max(imgHeight, winHeight);
-//                        h = Math.min(h, winHeight);
-//                        productImage.css('height', h);
-//                        productImage.css('width', 'auto');
+                    var $mainImgCl = $(e.target);
+                    var $parent = $mainImgCl.parent('div');
+                    var rotateIndex = Math.random() > 0.5 ? 1 : 0;
+                    if (rotateIndex) {
+                        var winWidth = $mainImgCl.parents('li')[0].clientWidth;
+                        var winHeight = winWidth * 1.24;
+                        $mainImgCl.css('width', 'auto');
+                        $mainImgCl.css('height', winWidth);
+                        $mainImgCl.css('margin-left', -($mainImgCl[0].clientWidth - winWidth) / 2);
+                        $mainImgCl.css('margin-top', -($mainImgCl[0].clientHeight - winHeight) / 2);
+                        $mainImgCl[0].style.transform = 'rotate(' + rotateIndex * 90 + 'deg)';
                     } else {
-                        //  扁平图
-                        var w = Math.max(imgWidth, winWidth);
-                        w = Math.min(w, winWidth);
-                        productImage.css('width', w);
-                        productImage.css('height', 'auto');
+                        $mainImgCl.css('margin-top', ($parent.height() - $mainImgCl.height()) / 2);
                     }
-                    setTimeout(function () {
-                        var div = productImage.parent('div');
-//                        if (productImage.height() < div.height()) {
-                        productImage.css('margin-top', (div.height() - productImage.height()) / 2);
-                        if (findOneAjax) {
-                            findOneAjax.abort();
-                        }
-//                        }
-                    }, 0)
                 });
             },
         });
@@ -862,6 +850,9 @@
         } else {
             url = interfaceUrl + 'sort_1 - 副本 (' + typeData.pageNo + ').json';
         }
+        if (findOneAjax) {
+            findOneAjax.abort();
+        }
 //        console.log(typeData);
         findOneAjax = $.ajax({
             url: interfaceUrl + "/findList",
@@ -942,29 +933,20 @@
                 }
                 $appendDOM.append(content);
                 $appendDOM.find('.main-img-cl').one('load', function (e) {
-                    var productImage = $(e.target);
-                    var imgWidth = productImage.width();
-                    var imgHeight = productImage.height();
-                    var winWidth = productImage.parents('li').width();
-                    var winHeight = winWidth * 1.24;
-                    if (imgWidth / winWidth < imgHeight / winHeight) {
-//                        var h = Math.max(imgHeight, winHeight);
-//                        h = Math.min(h, winHeight);
-//                        productImage.css('height', h);
-//                        productImage.css('width', 'auto');
+                    var $mainImgCl = $(e.target);
+                    var $parent = $mainImgCl.parent('div');
+                    var rotateIndex = Math.random() > 0.5 ? 1 : 0;
+                    if (rotateIndex) {
+                        var winWidth = $mainImgCl.parents('li')[0].clientWidth;
+                        var winHeight = winWidth * 1.24;
+                        $mainImgCl.css('width', 'auto');
+                        $mainImgCl.css('height', winWidth);
+                        $mainImgCl.css('margin-left', -($mainImgCl[0].clientWidth - winWidth) / 2);
+                        $mainImgCl.css('margin-top', -($mainImgCl[0].clientHeight - winHeight) / 2);
+                        $mainImgCl[0].style.transform = 'rotate(' + rotateIndex * 90 + 'deg)';
                     } else {
-                        //  扁平图
-                        var w = Math.max(imgWidth, winWidth);
-                        w = Math.min(w, winWidth);
-                        productImage.css('width', w);
-                        productImage.css('height', 'auto');
+                        $mainImgCl.css('margin-top', ($parent.height() - $mainImgCl.height()) / 2);
                     }
-                    setTimeout(function () {
-                        var div = productImage.parent('div');
-//                        if (productImage.height() < div.height()) {
-                        productImage.css('margin-top', (div.height() - productImage.height()) / 2);
-//                        }
-                    }, 0);
                 });
 
                 if ($document.height() <= $(window).height()) {
