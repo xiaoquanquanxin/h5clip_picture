@@ -1428,7 +1428,7 @@
                 picContainerStyle.left = diff / 2 + 'px';
                 picContainerStyle.marginBottom = -diff + 'px';
 
-                console.log(preW, picContainer.clientWidth);
+//                console.log(preW, picContainer.clientWidth);
 
                 //  highlight位置，大小
                 var ratio = picContainer.clientWidth / preW;
@@ -1510,43 +1510,32 @@
             height: 168,
             width: 'auto',
         });
-//        debugger;
-        var imgWidth = $productImage.width();
-        var imgHeight = $productImage.height();
-        var winWidth = $uploadImg.width();
-        var winHeight = $uploadImg.height();
-        if (rotateIndex % 2) {
-            console.log(parseInt(imgWidth), parseInt(winWidth), parseInt(imgHeight), parseInt(winHeight));
-            if (imgWidth / winWidth < imgHeight / winHeight) {
-                console.log('瘦高图');
-//                var w = Math.min(1 * winWidth, productImage.clientWidth);
-//                console.log(w);
-//                $productImage.css('width', w);
-//                $productImage.css('height', 'auto');
-            } else {
-                console.log('扁平图', rotateIndex);
-                var rate = imgHeight / imgWidth;
-                var w = Math.min(0.8 * winHeight, productImage.clientWidth);
-                var h = w * rate;
-                $productImage.css('height', h);
-                $productImage.css('width', 'auto');
-            }
-        } else {
-            //  瘦高图
-            if (imgWidth / winWidth < imgHeight / winHeight) {
-                var h = Math.max(imgHeight, winHeight * 0.8);
-                h = Math.min(h, winHeight * 0.8);
-                $productImage.css('height', h);
-                $productImage.css('width', 'auto');
-            } else {
-                //  扁平图
-                var w = Math.max(imgWidth, winWidth * 0.8);
-                w = Math.min(w, winWidth * 0.8);
-                $productImage.css('width', w);
-                $productImage.css('height', 'auto');
-            }
-        }
         productImage.style.transform = 'rotate(' + rotateIndex * 90 + 'deg)';
+        if (rotateIndex % 2) {
+            var imgWidth = $productImage.height();
+            var imgHeight = $productImage.width();
+            var winWidth =$uploadImg.height();
+            var winHeight = $uploadImg.width();
+        } else {
+            imgWidth = $productImage.width();
+            imgHeight = $productImage.height();
+            winWidth = $uploadImg.width();
+            winHeight = $uploadImg.height();
+        }
+        console.log(imgWidth, imgHeight);
+        //  瘦高图
+        if (imgWidth / winWidth < imgHeight / winHeight) {
+            var h = Math.max(imgHeight, winHeight * 0.8);
+            h = Math.min(h, winHeight * 0.8);
+            $productImage.css('height', h);
+            $productImage.css('width', 'auto');
+        } else {
+            //  扁平图
+            var w = Math.max(imgWidth, winWidth * 0.8);
+            w = Math.min(w, winWidth * 0.8);
+            $productImage.css('width', w);
+            $productImage.css('height', 'auto');
+        }
     }
 
     //  ajax上传base64
