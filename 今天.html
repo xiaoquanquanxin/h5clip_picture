@@ -802,7 +802,9 @@
             $("#uploadFile").val("");
             $('#mainPic').attr('src', '');
             $('input[name=peopleImage]').val();
+            //  还原图片，还原角度
             $productImage.attr("src", $productImage.data("src"));
+            rotateIndex = 0;
             return;
         }
         if (findOneAjax) {
@@ -840,6 +842,7 @@
 //        清空请输入编号input后的ajax
         console.log('清空请输入编号input后,就应该没有ajax了');
         $('#tab-content-' + index).html('');
+        //  返回这一页的最开头
         typeArray[index].pageNo = 1;
         renderBillList(typeArray[index], $('#tab-content-' + index), true);
     });
@@ -1483,14 +1486,14 @@
 //		console.log(cutImg.src.length);
         myUploadUrl = cutImg.src;                               //  monk数据，发版需注释
         $productImage.attr('src', cutImg.src + '');         //  monk数据，发版需注释
-        $productImage.on('load', productImageLoad);         //  monk数据，发版需注释
         return;
         ajaxImage(cutImg.src, function (url) {
             myUploadUrl = url;
             $productImage.attr('src', cutImg.src + '');
-            $productImage.on('load', productImageLoad);
         })
     }
+
+    $productImage.on('load', productImageLoad);         //  monk数据，发版需注释
 
     //  base64 Ajax成功以后的，form表单中的图片渲染成功后的load
     function productImageLoad() {
@@ -1500,23 +1503,47 @@
 
     //  计算在form中展示的图片的大小
     function calculateProductImage() {
+        $productImage.css({
+            height: 168,
+            width: 'auto',
+        });
+//        debugger;
         var imgWidth = $productImage.width();
         var imgHeight = $productImage.height();
         var winWidth = $uploadImg.width();
         var winHeight = $uploadImg.height();
-        //  瘦高图
-        if (imgWidth / winWidth < imgHeight / winHeight) {
-            var h = Math.max(imgHeight, winHeight * 0.8);
-            h = Math.min(h, winHeight * 0.8);
-            $productImage.css('height', h);
-            $productImage.css('width', 'auto');
+        if (rotateIndex % 2) {
+            console.log(parseInt(imgWidth), parseInt(winWidth), parseInt(imgHeight), parseInt(winHeight));
+            if (imgWidth / winWidth < imgHeight / winHeight) {
+                console.log('瘦高图');
+//                var w = Math.min(1 * winWidth, productImage.clientWidth);
+//                console.log(w);
+//                $productImage.css('width', w);
+//                $productImage.css('height', 'auto');
+            } else {
+                console.log('扁平图', rotateIndex);
+                var rate = imgHeight / imgWidth;
+                var w = Math.min(0.8 * winHeight, productImage.clientWidth);
+                var h = w * rate;
+                $productImage.css('height', h);
+                $productImage.css('width', 'auto');
+            }
         } else {
-            //  扁平图
-            var w = Math.max(imgWidth, winWidth * 0.8);
-            w = Math.min(w, winWidth * 0.8);
-            $productImage.css('width', w);
-            $productImage.css('height', 'auto');
+            //  瘦高图
+            if (imgWidth / winWidth < imgHeight / winHeight) {
+                var h = Math.max(imgHeight, winHeight * 0.8);
+                h = Math.min(h, winHeight * 0.8);
+                $productImage.css('height', h);
+                $productImage.css('width', 'auto');
+            } else {
+                //  扁平图
+                var w = Math.max(imgWidth, winWidth * 0.8);
+                w = Math.min(w, winWidth * 0.8);
+                $productImage.css('width', w);
+                $productImage.css('height', 'auto');
+            }
         }
+        productImage.style.transform = 'rotate(' + rotateIndex * 90 + 'deg)';
     }
 
     //  ajax上传base64
