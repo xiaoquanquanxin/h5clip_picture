@@ -1612,6 +1612,13 @@
 
     //  点击上传图片或横屏拍照，触发type=file 的 input
     $productImage.on('click', function (e) {
+        if (getPlatform() === 'isAndroid') {
+            var appVersion = getAppVersion();
+            if( !checkVersion(appVersion)){
+                myAlert('请更新到最新版本，才能上传照片');
+                return;
+            }
+        }
         $container.css('height', $window.height() + 5);
         $document.scrollTop(5);
         fileInput.click();
